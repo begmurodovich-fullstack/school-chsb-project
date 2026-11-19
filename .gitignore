@@ -1,0 +1,12 @@
+node_modules
+dist
+.env
+.vercel
+*.exe
+*.zip
+*.bat
+*.pyw
+BSB_CHSB_Baholash_Dasturi.html
+index.html
+bsb_chsb_icon.ico
+QOLLANMA_OQING.txt
