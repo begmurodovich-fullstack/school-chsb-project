@@ -1,0 +1,1 @@
+{ "name": "bsb-chsb-sayt", "version": "2.0.0", "private": true, "scripts": { "build": "node build.js", "start": "npx serve dist" } }
