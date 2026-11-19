@@ -1,0 +1,2317 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BSB / CHSB Baholaş Dasturi — V2.0</title>
+  
+  
+  
+  <style>
+    /* Local system fonts for instant zero-hang startup */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f3f4f6;
+      color: #111827;
+    }
+    .win-window {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.06);
+      border: 1px solid #d1d5db;
+    }
+    .header-navy { background-color: #183661; }
+    .btn-yellow { background-color: #facc15; color: #183661; border: 1px solid #ca8a04; }
+    .btn-yellow:hover { background-color: #fde047; }
+    .btn-green { background-color: #218838; color: #ffffff; }
+    .btn-green:hover { background-color: #1e7e34; }
+    .report-page {
+      background: #ffffff;
+      width: 210mm;
+      min-height: 296mm;
+      margin: 0 auto 24px auto;
+      padding: 10mm 11mm;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+      position: relative;
+      overflow: visible;
+    }
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 9.2px;
+    }
+    .report-table tr {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .report-table th, .report-table td {
+      border: 1px solid #334155;
+      padding: 2.5px 1.5px;
+      text-align: center;
+      line-height: 1.2;
+      word-wrap: break-word;
+      overflow: hidden;
+    }
+    .report-table th.bg-navy {
+      background-color: #183661 !important;
+      color: #ffffff !important;
+      font-weight: 600;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .report-table td.bg-sub {
+      background-color: #e2e8f0 !important;
+      font-weight: 700;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .report-table td.bg-bilish, .report-table th.bg-bilish {
+      background-color: #e0f2fe !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .report-table td.bg-qollash, .report-table th.bg-qollash {
+      background-color: #fef3c7 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .report-table td.bg-mulohaza, .report-table th.bg-mulohaza {
+      background-color: #fce7f3 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .report-table tr.summary-row td {
+      background-color: #f1f5f9 !important;
+      font-weight: 700;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .avoid-break {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .pdf-clone-root {
+      width: 794px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #ffffff !important;
+    }
+    .pdf-clone-root .report-page {
+      margin: 0 !important;
+      box-shadow: none !important;
+      width: 794px !important;
+      min-height: auto !important;
+      height: auto !important;
+      overflow: visible !important;
+      padding: 10mm 11mm !important;
+    }
+    .pdf-clone-root .page-break-before {
+      page-break-before: always;
+      break-before: page;
+    }
+    @media print {
+      @page { size: A4 portrait; margin: 8mm; }
+      body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+      .report-page {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 2mm 3mm !important;
+        width: 100% !important;
+        min-height: auto !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      #reportPage2 {
+        page-break-before: always;
+        break-before: page;
+      }
+      .win-window { border: none !important; box-shadow: none !important; }
+    }
+  </style>
+
+  <style id="offline-fallback-styles">
+    /* Core Reset & Fallback Layout when CDN is unavailable */
+    *, *::before, *::after { box-sizing: border-box; }
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .inline-flex { display: inline-flex; }
+    .grid { display: grid; }
+    .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .col-span-4 { grid-column: span 4 / span 4; }
+    .col-span-5 { grid-column: span 5 / span 5; }
+    .col-span-7 { grid-column: span 7 / span 7; }
+    .col-span-8 { grid-column: span 8 / span 8; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .justify-end { justify-content: flex-end; }
+    .flex-wrap { flex-wrap: wrap; }
+    .flex-1 { flex: 1 1 0%; }
+    .gap-1 { gap: 0.25rem; }
+    .gap-1\.5 { gap: 0.375rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-2\.5 { gap: 0.625rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    .space-y-2 > * + * { margin-top: 0.5rem; }
+    .space-y-2\.5 > * + * { margin-top: 0.625rem; }
+    .space-y-3 > * + * { margin-top: 0.75rem; }
+    .space-y-3\.5 > * + * { margin-top: 0.875rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+    .max-w-6xl { max-width: 72rem; margin-left: auto; margin-right: auto; }
+    .max-w-2xl { max-width: 42rem; margin-left: auto; margin-right: auto; }
+    .max-w-xl { max-width: 36rem; margin-left: auto; margin-right: auto; }
+    .w-full { width: 100%; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-left { text-align: left; }
+    .font-bold { font-weight: 700; }
+    .font-extrabold { font-weight: 800; }
+    .font-semibold { font-weight: 600; }
+    .uppercase { text-transform: uppercase; }
+    .underline { text-decoration: underline; }
+    .rounded, .rounded-md { border-radius: 0.375rem; }
+    .rounded-sm { border-radius: 0.25rem; }
+    .p-2 { padding: 0.5rem; }
+    .p-3 { padding: 0.75rem; }
+    .p-4 { padding: 1rem; }
+    .p-5 { padding: 1.25rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .px-7 { padding-left: 1.75rem; padding-right: 1.75rem; }
+    .px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-3 { margin-top: 0.75rem; }
+    .mt-3\.5 { margin-top: 0.875rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-5 { margin-top: 1.25rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mb-1 { margin-bottom: 0.25rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .bg-white { background-color: #ffffff; }
+    .bg-slate-50 { background-color: #f8fafc; }
+    .bg-slate-100 { background-color: #f1f5f9; }
+    .bg-slate-200 { background-color: #e2e8f0; }
+    .bg-slate-600 { background-color: #475569; color: #fff; }
+    .bg-slate-700 { background-color: #334155; color: #fff; }
+    .bg-slate-800 { background-color: #1e293b; color: #fff; }
+    .bg-blue-700 { background-color: #1d4ed8; color: #fff; }
+    .bg-blue-900 { background-color: #1e3a8a; color: #fff; }
+    .bg-indigo-600 { background-color: #4f46e5; color: #fff; }
+    .bg-indigo-700 { background-color: #4338ca; color: #fff; }
+    .bg-emerald-600 { background-color: #059669; color: #fff; }
+    .bg-emerald-700 { background-color: #047857; color: #fff; }
+    .bg-purple-700 { background-color: #7e22ce; color: #fff; }
+    .bg-red-700 { background-color: #b91c1c; color: #fff; }
+    .bg-amber-600 { background-color: #d97706; color: #fff; }
+    .text-white { color: #ffffff; }
+    .text-slate-600 { color: #475569; }
+    .text-slate-700 { color: #334155; }
+    .text-slate-800 { color: #1e293b; }
+    .text-slate-900 { color: #0f172a; }
+    .text-blue-100 { color: #dbeafe; }
+    .text-blue-700 { color: #1d4ed8; }
+    .text-blue-900 { color: #1e3a8a; }
+    .text-red-600 { color: #dc2626; }
+    .text-red-700 { color: #b91c1c; }
+    .text-emerald-700 { color: #047857; }
+    .border { border-width: 1px; border-style: solid; border-color: #cbd5e1; }
+    .border-b { border-bottom-width: 1px; border-bottom-style: solid; border-color: #cbd5e1; }
+    .border-t { border-top-width: 1px; border-top-style: solid; border-color: #cbd5e1; }
+    .border-slate-300 { border-color: #cbd5e1; }
+    .border-slate-400 { border-color: #94a3b8; }
+    .border-slate-500 { border-color: #64748b; }
+    .border-slate-700 { border-color: #334155; }
+    .overflow-x-auto { overflow-x: auto; }
+    .fixed { position: fixed; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .z-50 { z-index: 50; }
+    button { cursor: pointer; }
+    input, select, textarea { font-family: inherit; }
+  </style>
+
+
+  <style id="complete-standalone-css">
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f3f4f6;
+      color: #111827;
+      margin: 0;
+      padding: 16px;
+    }
+    .min-h-screen { min-height: 100vh; }
+    .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .max-w-6xl { max-width: 72rem; margin-left: auto; margin-right: auto; }
+    .max-w-2xl { max-width: 42rem; margin-left: auto; margin-right: auto; }
+    .max-w-xl { max-width: 36rem; margin-left: auto; margin-right: auto; }
+    .max-w-\[210mm\] { max-width: 210mm; margin-left: auto; margin-right: auto; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .mx-3 { margin-left: 0.75rem; margin-right: 0.75rem; }
+    .bg-white { background-color: #ffffff; }
+    .bg-slate-50 { background-color: #f8fafc; }
+    .bg-slate-50\/70 { background-color: rgba(248,250,252,0.7); }
+    .bg-slate-100 { background-color: #f1f5f9; }
+    .bg-slate-200 { background-color: #e2e8f0; }
+    .bg-slate-600 { background-color: #475569; }
+    .bg-slate-700 { background-color: #334155; }
+    .bg-slate-800 { background-color: #1e293b; }
+    .bg-slate-900 { background-color: #0f172a; }
+    .bg-blue-50 { background-color: #eff6ff; }
+    .bg-blue-700 { background-color: #1d4ed8; }
+    .bg-blue-800 { background-color: #1e40af; }
+    .bg-blue-900 { background-color: #1e3a8a; }
+    .bg-indigo-50 { background-color: #eef2ff; }
+    .bg-indigo-50\/70, .bg-indigo-50\/90 { background-color: #eef2ff; }
+    .bg-indigo-600 { background-color: #4f46e5; }
+    .bg-indigo-700 { background-color: #4338ca; }
+    .bg-emerald-50 { background-color: #ecfdf5; }
+    .bg-emerald-50\/70 { background-color: #ecfdf5; }
+    .bg-emerald-600 { background-color: #059669; }
+    .bg-emerald-700 { background-color: #047857; }
+    .bg-amber-50 { background-color: #fffbeb; }
+    .bg-amber-100 { background-color: #fef3c7; }
+    .bg-amber-600 { background-color: #d97706; }
+    .bg-amber-800 { background-color: #92400e; }
+    .bg-red-50 { background-color: #fef2f2; }
+    .bg-red-100 { background-color: #fee2e2; }
+    .bg-red-700 { background-color: #b91c1c; }
+    .bg-purple-700 { background-color: #7e22ce; }
+    .bg-sky-200 { background-color: #bae6fd; }
+    .bg-sky-800 { background-color: #075985; }
+    .bg-amber-200 { background-color: #fde68a; }
+    .bg-pink-200 { background-color: #fbcfe8; }
+    .bg-pink-900 { background-color: #831843; }
+    .bg-\[\#183661\] { background-color: #183661; }
+    .bg-\[\#2c3e50\] { background-color: #2c3e50; }
+    .bg-\[\#8e44ad\] { background-color: #8e44ad; }
+    .bg-\[\#1d6ce0\] { background-color: #1d6ce0; }
+    .bg-\[\#c0392b\] { background-color: #c0392b; }
+    .bg-\[\#2e9e5b\] { background-color: #2e9e5b; }
+    .bg-\[\#2c6ecb\] { background-color: #2c6ecb; }
+    .bg-\[\#e5a93c\] { background-color: #e5a93c; }
+    .bg-\[\#d94343\] { background-color: #d94343; }
+    .bg-\[\#24589c\] { background-color: #24589c; }
+    .bg-\[\#d99b26\] { background-color: #d99b26; }
+    .bg-\[\#c93b3b\] { background-color: #c93b3b; }
+    .bg-black\/50 { background-color: rgba(0, 0, 0, 0.55); }
+
+    .text-white { color: #ffffff; }
+    .text-slate-500 { color: #64748b; }
+    .text-slate-600 { color: #475569; }
+    .text-slate-700 { color: #334155; }
+    .text-slate-800 { color: #1e293b; }
+    .text-slate-900 { color: #0f172a; }
+    .text-blue-100 { color: #dbeafe; }
+    .text-blue-700 { color: #1d4ed8; }
+    .text-blue-800 { color: #1e40af; }
+    .text-blue-900 { color: #1e3a8a; }
+    .text-blue-950 { color: #172554; }
+    .text-indigo-800 { color: #3730a3; }
+    .text-indigo-900 { color: #312e81; }
+    .text-indigo-950 { color: #1e1b4b; }
+    .text-emerald-700 { color: #047857; }
+    .text-emerald-900 { color: #064e3b; }
+    .text-emerald-950 { color: #022c22; }
+    .text-teal-700 { color: #0f766e; }
+    .text-amber-700 { color: #b45309; }
+    .text-amber-900 { color: #78350f; }
+    .text-red-600 { color: #dc2626; }
+    .text-red-700 { color: #b91c1c; }
+
+    .text-\[8px\] { font-size: 8px; }
+    .text-\[8\.5px\] { font-size: 8.5px; }
+    .text-\[8\.8px\] { font-size: 8.8px; }
+    .text-\[9px\] { font-size: 9px; }
+    .text-\[9\.2px\] { font-size: 9.2px; }
+    .text-\[9\.5px\] { font-size: 9.5px; }
+    .text-\[10px\] { font-size: 10px; }
+    .text-\[10\.5px\] { font-size: 10.5px; }
+    .text-\[11px\] { font-size: 11px; }
+    .text-xs { font-size: 0.75rem; line-height: 1rem; }
+    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .text-base { font-size: 1rem; line-height: 1.5rem; }
+    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .font-extrabold { font-weight: 800; }
+    .font-mono { font-family: Consolas, 'Courier New', monospace; }
+    .uppercase { text-transform: uppercase; }
+    .italic { font-style: italic; }
+    .underline { text-decoration: underline; }
+    .tracking-wide { letter-spacing: 0.025em; }
+    .tracking-tight { letter-spacing: -0.025em; }
+    .leading-snug { line-height: 1.375; }
+    .leading-relaxed { line-height: 1.625; }
+    .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .hidden { display: none !important; }
+    .block { display: block; }
+    .inline-block { display: inline-block; }
+    .flex { display: flex; }
+    .inline-flex { display: inline-flex; }
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    @media (min-width: 768px) {
+      .md\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+      .md\:col-span-4 { grid-column: span 4 / span 4; }
+      .md\:col-span-8 { grid-column: span 8 / span 8; }
+    }
+    .col-span-4 { grid-column: span 4 / span 4; }
+    .col-span-5 { grid-column: span 5 / span 5; }
+    .col-span-7 { grid-column: span 7 / span 7; }
+    .col-span-8 { grid-column: span 8 / span 8; }
+
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .justify-end { justify-content: flex-end; }
+    .flex-wrap { flex-wrap: wrap; }
+    .flex-1 { flex: 1 1 0%; }
+    .flex-shrink-0, .shrink-0 { flex-shrink: 0; }
+
+    .gap-1 { gap: 0.25rem; }
+    .gap-1\.5 { gap: 0.375rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-2\.5 { gap: 0.625rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+
+    .space-y-1 > * + * { margin-top: 0.25rem; }
+    .space-y-1\.5 > * + * { margin-top: 0.375rem; }
+    .space-y-2 > * + * { margin-top: 0.5rem; }
+    .space-y-2\.5 > * + * { margin-top: 0.625rem; }
+    .space-y-3 > * + * { margin-top: 0.75rem; }
+    .space-y-3\.5 > * + * { margin-top: 0.875rem; }
+    .space-y-4 > * + * { margin-top: 1rem; }
+
+    .w-full { width: 100%; }
+    .min-w-full { min-width: 100%; }
+    .w-2\.5 { width: 0.625rem; }
+    .h-2\.5 { height: 0.625rem; }
+    .w-3 { width: 0.75rem; }
+    .h-3 { height: 0.75rem; }
+    .w-4 { width: 1rem; }
+    .h-4 { height: 1rem; }
+    .w-6 { width: 1.5rem; }
+    .w-7 { width: 1.75rem; }
+    .w-8 { width: 2rem; }
+    .w-11 { width: 2.75rem; }
+    .w-12 { width: 3rem; }
+    .w-14 { width: 3.5rem; }
+    .w-16 { width: 4rem; }
+    .w-20 { width: 5rem; }
+    .w-28 { width: 7rem; }
+    .h-28 { height: 7rem; }
+    .h-32 { height: 8rem; }
+    .w-\[26mm\] { width: 26mm; }
+    .w-\[34\%\] { width: 34%; }
+    .w-\[68\%\] { width: 68%; }
+    .min-w-\[46px\] { min-width: 46px; }
+    .min-w-\[110px\] { min-width: 110px; }
+    .min-w-\[155px\] { min-width: 155px; }
+    .max-h-80 { max-height: 20rem; }
+    .max-h-\[380px\] { max-height: 380px; }
+
+    .p-0\.5 { padding: 0.125rem; }
+    .p-2 { padding: 0.5rem; }
+    .p-2\.5 { padding: 0.625rem; }
+    .p-3 { padding: 0.75rem; }
+    .p-4 { padding: 1rem; }
+    .p-5 { padding: 1.25rem; }
+    .p-6 { padding: 1.5rem; }
+    .px-0\.5 { padding-left: 0.125rem; padding-right: 0.125rem; }
+    .px-1 { padding-left: 0.25rem; padding-right: 0.25rem; }
+    .px-1\.5 { padding-left: 0.375rem; padding-right: 0.375rem; }
+    .px-2 { padding-left: 0.5rem; padding-right: 0.5rem; }
+    .px-2\.5 { padding-left: 0.625rem; padding-right: 0.625rem; }
+    .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .px-3\.5 { padding-left: 0.875rem; padding-right: 0.875rem; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+    .px-7 { padding-left: 1.75rem; padding-right: 1.75rem; }
+    .px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+    .py-0\.5 { padding-top: 0.125rem; padding-bottom: 0.125rem; }
+    .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    .py-1\.5 { padding-top: 0.375rem; padding-bottom: 0.375rem; }
+    .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .py-2\.5 { padding-top: 0.625rem; padding-bottom: 0.625rem; }
+    .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+    .py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+    .py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+    .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+    .pt-0\.5 { padding-top: 0.125rem; }
+    .pt-2 { padding-top: 0.5rem; }
+    .pt-3 { padding-top: 0.75rem; }
+    .pb-1\.5 { padding-bottom: 0.375rem; }
+    .pb-2 { padding-bottom: 0.5rem; }
+    .pb-3 { padding-bottom: 0.75rem; }
+    .pl-1 { padding-left: 0.25rem; }
+    .pl-1\.5 { padding-left: 0.375rem; }
+    .pl-2 { padding-left: 0.5rem; }
+    .pl-4 { padding-left: 1rem; }
+    .pr-1 { padding-right: 0.25rem; }
+    .pr-2 { padding-right: 0.5rem; }
+
+    .mt-0\.5 { margin-top: 0.125rem; }
+    .mt-1 { margin-top: 0.25rem; }
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-3 { margin-top: 0.75rem; }
+    .mt-3\.5 { margin-top: 0.875rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-5 { margin-top: 1.25rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mt-\[10mm\] { margin-top: 10mm; }
+    .mb-1 { margin-bottom: 0.25rem; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-2\.5 { margin-bottom: 0.625rem; }
+    .mb-3 { margin-bottom: 0.75rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .ml-1 { margin-left: 0.25rem; }
+    .-mt-1 { margin-top: -0.25rem; }
+
+    .rounded { border-radius: 0.25rem; }
+    .rounded-sm { border-radius: 0.125rem; }
+    .rounded-md { border-radius: 0.375rem; }
+    .rounded-xs { border-radius: 2px; }
+    .border { border: 1px solid #cbd5e1; }
+    .border-2 { border-width: 2px; border-style: solid; }
+    .border-b { border-bottom: 1px solid #cbd5e1; }
+    .border-t { border-top: 1px solid #cbd5e1; }
+    .border-l-4 { border-left-width: 4px; border-left-style: solid; }
+    .border-dashed { border-style: dashed; }
+    .border-collapse { border-collapse: collapse; }
+    .border-slate-200 { border-color: #e2e8f0; }
+    .border-slate-300 { border-color: #cbd5e1; }
+    .border-slate-400 { border-color: #94a3b8; }
+    .border-slate-500 { border-color: #64748b; }
+    .border-slate-700 { border-color: #334155; }
+    .border-indigo-200 { border-color: #c7d2fe; }
+    .border-indigo-300 { border-color: #a5b4fc; }
+    .border-indigo-400 { border-color: #818cf8; }
+    .border-indigo-600 { border-color: #4f46e5; }
+    .border-emerald-200 { border-color: #a7f3d0; }
+    .border-emerald-300 { border-color: #6ee7b7; }
+    .border-emerald-600, .border-l-emerald-600 { border-color: #059669; }
+    .border-l-teal-600 { border-color: #0d9488; }
+    .border-l-blue-700 { border-color: #1d4ed8; }
+    .border-l-blue-800 { border-color: #1e40af; }
+    .border-l-amber-500 { border-color: #f59e0b; }
+    .border-l-red-600 { border-color: #dc2626; }
+    .border-amber-300 { border-color: #fcd34d; }
+    .border-amber-400 { border-color: #fbbf24; }
+    .border-red-300 { border-color: #fca5a5; }
+    .border-blue-300 { border-color: #93c5fd; }
+
+    .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+    .shadow { box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); }
+    .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-x-auto { overflow-x: auto; }
+    .overflow-y-auto { overflow-y: auto; }
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .fixed { position: fixed; }
+    .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+    .z-10 { z-index: 10; }
+    .z-50 { z-index: 50; }
+    .sticky { position: sticky; }
+    .right-0 { right: 0; }
+    .right-\[44px\] { right: 44px; }
+    .right-\[88px\] { right: 88px; }
+    .pointer-events-none { pointer-events: none; }
+    .select-none { user-select: none; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-left { text-align: left; }
+    .list-decimal { list-style-type: decimal; }
+    .list-disc { list-style-type: disc; }
+    .list-inside { list-style-position: inside; }
+    button { cursor: pointer; }
+    input, select, textarea { font-family: inherit; }
+  </style>
+  <script>
+    // Built-in zero-dependency Chart renderer (works 100% offline with zero internet!)
+    window.Chart = function(ctx, cfg) {
+      const canvas = ctx.canvas;
+      const dpr = 2;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const w = Math.max(100, rect.width || 240);
+      const h = Math.max(100, rect.height || 120);
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+
+      if (cfg.type === 'doughnut') {
+        const vals = cfg.data.datasets[0].data || [0,0,0,0];
+        const colors = cfg.data.datasets[0].backgroundColor || ['#2e9e5b','#2c6ecb','#e5a93c','#d94343'];
+        const total = vals.reduce((a, b) => a + b, 0);
+        const cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 4;
+        const innerR = r * 0.64;
+        if (total === 0) {
+          ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.fillStyle = '#e2e8f0'; ctx.fill();
+        } else {
+          let start = -Math.PI / 2;
+          vals.forEach((v, i) => {
+            if (v <= 0) return;
+            const slice = (v / total) * Math.PI * 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, r, start, start + slice);
+            ctx.closePath();
+            ctx.fillStyle = colors[i];
+            ctx.fill();
+            ctx.lineWidth = 1.5; ctx.strokeStyle = '#fff'; ctx.stroke();
+            start += slice;
+          });
+        }
+        ctx.beginPath(); ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff'; ctx.fill();
+      } else if (cfg.type === 'bar') {
+        const labels = cfg.data.labels || [];
+        const vals = cfg.data.datasets[0].data || [];
+        const colors = cfg.data.datasets[0].backgroundColor || [];
+        const padL = 46, padR = 30, padT = 6, padB = 16;
+        const plotW = Math.max(40, w - padL - padR);
+        const plotH = Math.max(30, h - padT - padB);
+        ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
+        ctx.font = '7.5px Segoe UI, sans-serif'; ctx.fillStyle = '#64748b'; ctx.textAlign = 'center';
+        [0, 25, 50, 75, 100].forEach(tick => {
+          const x = padL + (tick / 100) * plotW;
+          ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT + plotH); ctx.stroke();
+          ctx.fillText(tick, x, h - 4);
+        });
+        const n = Math.max(1, vals.length);
+        const rowH = plotH / n;
+        const barH = Math.max(3, rowH * 0.68);
+        vals.forEach((v, idx) => {
+          const y = padT + idx * rowH + (rowH - barH) / 2;
+          const bw = Math.max(0, (Math.min(100, v) / 100) * plotW);
+          ctx.fillStyle = colors[idx] || '#2e9e5b';
+          ctx.fillRect(padL, y, bw, barH);
+          ctx.fillStyle = '#334155'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+          ctx.fillText(labels[idx] || '', padL - 4, y + barH / 2);
+          ctx.fillStyle = '#1e293b'; ctx.font = 'bold 7.5px Segoe UI, sans-serif'; ctx.textAlign = 'left';
+          ctx.fillText(v + '%', padL + bw + 3, y + barH / 2);
+          ctx.font = '7.5px Segoe UI, sans-serif';
+        });
+      }
+      this.destroy = function() {};
+      return this;
+    };
+  </script>
+
+</head>
+<body class="min-h-screen py-4 px-2 sm:px-6">
+
+  <div class="max-w-6xl mx-auto win-window bg-white rounded-md overflow-hidden">
+    <!-- Title Bar -->
+    <div class="bg-slate-100 border-b border-slate-300 px-3 py-1.5 flex items-center justify-between text-xs text-slate-700 select-none no-print">
+      <div class="flex items-center gap-2 font-medium">
+        <span class="inline-flex items-center justify-center w-4 h-4 rounded bg-blue-900 text-white text-[10px] font-bold">B</span>
+        <span>BSB / CHSB — PDF V2.0 (Windows Desktop Edition)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openTransferModal()" class="text-[11px] bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-300 px-2 py-0.5 rounded font-semibold transition flex items-center gap-1" title="Boşqa kompyuterlarga ötkaziş kodi">
+          🔑 Boşqa qurilma kodi
+        </button>
+        <button onclick="switchView('home')" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-800 px-2 py-0.5 rounded font-medium transition">
+          Boş sahifa
+        </button>
+      </div>
+    </div>
+
+    <!-- Navy Banner -->
+    <div class="header-navy text-white py-5 px-4 text-center no-print">
+      
+      <div style="display:flex; justify-content:center; margin-bottom:10px;">
+        <svg width="260" height="68" viewBox="0 0 260 68" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 4px 10px rgba(0,0,0,0.22));">
+          <rect x="2" y="4" width="256" height="60" rx="12" fill="url(#gradCard)" stroke="#60a5fa" stroke-width="1.5"/>
+          <defs>
+            <linearGradient id="gradCard" x1="0" y1="0" x2="260" y2="68" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#0f294a"/>
+              <stop offset="100%" stop-color="#1e40af"/>
+            </linearGradient>
+          </defs>
+          <!-- Diploma / Certificate Icon -->
+          <rect x="16" y="14" width="38" height="40" rx="6" fill="#ffffff" fill-opacity="0.14" stroke="#93c5fd" stroke-width="1.2"/>
+          <line x1="23" y1="23" x2="47" y2="23" stroke="#fde047" stroke-width="2.2" stroke-linecap="round"/>
+          <line x1="23" y1="30" x2="43" y2="30" stroke="#e0f2fe" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="23" y1="36" x2="39" y2="36" stroke="#e0f2fe" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="45" cy="44" r="7" fill="#22c55e" stroke="#ffffff" stroke-width="1.4"/>
+          <path d="M42 44L44 46L48.5 41.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Mini Bar Chart -->
+          <rect x="66" y="38" width="7" height="14" rx="2" fill="#ef4444"/>
+          <rect x="76" y="31" width="7" height="21" rx="2" fill="#f59e0b"/>
+          <rect x="86" y="23" width="7" height="29" rx="2" fill="#38bdf8"/>
+          <rect x="96" y="16" width="7" height="36" rx="2" fill="#22c55e"/>
+          <!-- Grade Badges 5 & 4 -->
+          <rect x="115" y="15" width="60" height="38" rx="8" fill="#ffffff" fill-opacity="0.12" stroke="#fde047" stroke-width="1.2"/>
+          <text x="145" y="33" text-anchor="middle" fill="#fde047" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="800">50 / 40</text>
+          <text x="145" y="46" text-anchor="middle" fill="#dbeafe" font-family="Segoe UI, Arial, sans-serif" font-size="8.5" font-weight="700">BSB • CHSB</text>
+          <!-- A+ / 5 Star Seal -->
+          <circle cx="216" cy="34" r="20" fill="#facc15" stroke="#ffffff" stroke-width="2"/>
+          <text x="216" y="39" text-anchor="middle" fill="#183661" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="900">5★</text>
+        </svg>
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-wide uppercase">BSB / CHSB BAHOLAŞ DASTURI</h1>
+      <p class="text-xs sm:text-sm mt-2 text-blue-100">
+        Muallif: <span class="font-semibold text-white">RUSTAMOV ÖKTAM SAYFIYEVIÇ</span> &nbsp;|&nbsp;
+        <button onclick="openGuideModal()" class="underline font-bold hover:text-yellow-300 uppercase tracking-wide">DASTURDAN FOYDALANIŞ QÖLLANMASI</button> &nbsp;|&nbsp;
+        <a href="https://t.me/softstarup" target="_blank" rel="noopener noreferrer" class="underline hover:text-yellow-300 font-semibold">Telegram kanalimiz! (@softstarup)</a>
+      </p>
+      <div class="mt-3.5">
+        <button onclick="checkUpdates()" class="btn-yellow px-5 py-1.5 rounded text-sm font-bold inline-flex items-center gap-2 shadow-sm transition cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Yangilanişni tekşiriş
+        </button>
+      </div>
+    </div>
+
+    <!-- VIEW 1: HOME -->
+    <div id="view-home" class="p-5 sm:p-8 bg-white">
+      <div class="max-w-2xl mx-auto border border-slate-700 p-5 sm:p-7 bg-white">
+        <div class="space-y-3.5 text-xs sm:text-sm">
+          <!-- Maktab nomi -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">Maktabning töliq nomi</label>
+            <div class="col-span-7 flex items-center gap-1.5">
+              <input id="inputSchool" type="text" readonly value="Qiziltepa tumani 24-sonli umumiy örta ta'lim maktabi" class="w-full border border-slate-400 bg-slate-100 text-slate-700 px-2.5 py-1 text-xs sm:text-sm focus:outline-none">
+              <button type="button" onclick="requestProtectedUnlock()" id="btnUnlockProtected" title="Parol bilan özgartiriş" class="shrink-0 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-400 px-2 py-1 rounded text-[11px] font-bold">
+                🔒 Özgartiriş
+              </button>
+            </div>
+          </div>
+
+          <!-- ÖIBDÖ -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">ÖIBDÖ F.I.Ş</label>
+            <div class="col-span-7">
+              <input id="inputDeputy" type="text" readonly value="Rustamov Öktam Sayfiyeviç" class="w-full border border-slate-400 bg-slate-100 text-slate-700 px-2.5 py-1 text-xs sm:text-sm focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Fan öqituvçisi -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">Fan öqituvçisi F.I.Ş</label>
+            <div class="col-span-7">
+              <input id="inputTeacher" type="text" placeholder="Masalan: Karimov Dilşod Akmaloviç" class="w-full border border-slate-500 px-2.5 py-1 text-xs sm:text-sm focus:outline-none focus:border-blue-800">
+            </div>
+          </div>
+
+          <!-- Metodbirlaşma rahbari -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">Metodbirlaşma rahbari F.I.Ş</label>
+            <div class="col-span-7">
+              <input id="inputMethodHead" type="text" placeholder="Masalan: Rahmonova Gulnora Sobirovna" class="w-full border border-slate-500 px-2.5 py-1 text-xs sm:text-sm focus:outline-none focus:border-blue-800">
+            </div>
+          </div>
+
+          <!-- Fan turi -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">Fan turi</label>
+            <div class="col-span-7">
+              <select id="selectSubject" class="w-full border border-slate-500 px-2 py-1 text-xs sm:text-sm bg-white focus:outline-none focus:border-blue-800">
+                <option value="">Tanlang</option>
+                <option value="Informatika va AT">Informatika va AT</option>
+                <option value="Matematika">Matematika</option>
+                <option value="Ona tili va adabiyot">Ona tili va adabiyot</option>
+                <option value="Ingliz tili">Ingliz tili</option>
+                <option value="Rus tili">Rus tili</option>
+                <option value="Fizika">Fizika</option>
+                <option value="Kimyo">Kimyo</option>
+                <option value="Biologiya">Biologiya</option>
+                <option value="Tarix">Tarix</option>
+                <option value="Geografiya">Geografiya</option>
+                <option value="Texnologiya">Texnologiya</option>
+                <option value="Jismoniy tarbiya">Jismoniy tarbiya</option>
+                <option value="Çizmaçilik">Çizmaçilik</option>
+                <option value="Tasviriy san'at">Tasviriy san'at</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Nazorat turi -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">Nazorat turi</label>
+            <div class="col-span-7">
+              <select id="selectControlType" onchange="onControlTypeChange()" class="w-full border border-slate-500 px-2 py-1 text-xs sm:text-sm bg-white focus:outline-none focus:border-blue-800">
+                <option value="">Tanlang</option>
+                <option value="BSB-1">BSB-1</option>
+                <option value="BSB-2">BSB-2</option>
+                <option value="BSB-3">BSB-3</option>
+                <option value="BSB-4">BSB-4</option>
+                <option value="ÇSB-1">ÇSB-1</option>
+                <option value="ÇSB-2">ÇSB-2</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Sinf & Öquvçilar soni -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">Sinf</label>
+            <div class="col-span-7 flex flex-wrap items-center gap-2">
+              <select id="selectGrade" class="border border-slate-500 px-2 py-1 text-xs sm:text-sm bg-white w-14">
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+              </select>
+              <select id="selectSection" class="border border-slate-500 px-2 py-1 text-xs sm:text-sm bg-white w-14">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+                <option value="V">V</option>
+              </select>
+              <span class="font-bold text-slate-800 text-xs ml-1">Öquvçilar soni</span>
+              <input id="inputStudentCount" type="number" min="1" max="50" placeholder="0" class="border border-slate-500 px-2 py-1 text-xs sm:text-sm w-16 text-center">
+            </div>
+          </div>
+
+          <!-- 7-sinf guruh tanlash -->
+          <div id="groupSelectorContainer" class="hidden grid grid-cols-12 items-center gap-2 bg-indigo-50/90 border border-indigo-300 rounded px-2.5 py-2">
+            <label class="col-span-5 text-right font-bold text-indigo-900 pr-2 text-xs sm:text-sm">7-sinf guruhi (2 guruh):</label>
+            <div class="col-span-7 flex items-center gap-2">
+              <input type="hidden" id="selectGroup" value="1-guruh">
+              <button type="button" id="btnGroup1" onclick="selectGroupOption('1-guruh')" class="px-3 py-1 rounded text-xs font-bold border border-indigo-600 bg-indigo-700 text-white shadow-sm transition cursor-pointer">
+                1-guruh
+              </button>
+              <button type="button" id="btnGroup2" onclick="selectGroupOption('2-guruh')" class="px-3 py-1 rounded text-xs font-bold border border-indigo-400 bg-white text-indigo-900 hover:bg-indigo-100 transition cursor-pointer">
+                2-guruh
+              </button>
+            </div>
+          </div>
+
+          <!-- Çorak & Sana -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">Çorak va Sana</label>
+            <div class="col-span-7 flex flex-wrap items-center gap-2">
+              <select id="selectQuarter" class="border border-slate-500 px-2 py-1 text-xs sm:text-sm bg-white flex-1 min-w-[110px] focus:outline-none focus:border-blue-800">
+                <option value="">Tanlang</option>
+                <option value="1-çorak">1-çorak</option>
+                <option value="2-çorak">2-çorak</option>
+                <option value="3-çorak">3-çorak</option>
+                <option value="4-çorak">4-çorak</option>
+              </select>
+              <input id="inputDate" type="date" class="border border-slate-500 px-2 py-1 text-xs sm:text-sm bg-white focus:outline-none focus:border-blue-800" title="Nazorat sanasini tanlang">
+            </div>
+          </div>
+
+          <!-- Savollar soni -->
+          <div class="grid grid-cols-12 items-center gap-2">
+            <label class="col-span-5 text-right font-bold text-slate-800 pr-2">Savollar soni</label>
+            <div class="col-span-7">
+              <input id="inputQuestionCount" type="number" min="1" max="30" placeholder="0" class="border border-slate-500 px-2 py-1 text-xs sm:text-sm w-20 text-center">
+            </div>
+          </div>
+
+          <!-- Maks. yiğ'indi & Limit -->
+          <div class="pt-2 text-center font-bold text-slate-800 text-xs sm:text-sm flex items-center justify-center gap-6">
+            <span>Maks. yiğ'indi: <span id="homeMaxSum" class="text-blue-900">0</span></span>
+            <span>Limit: <span id="homeLimitDisplay" class="text-red-700 font-extrabold">50</span> ball</span>
+          </div>
+          <p id="limitHintText" class="text-center text-[11px] text-slate-500 -mt-1">
+            BSB uçun maksimal ball — 50 ball, ÇSB uçun maksimal ball — 40 ball.
+          </p>
+        </div>
+      </div>
+
+      <!-- Primary Action Button -->
+      <div class="mt-6 text-center">
+        <button onclick="goToEntryView()" class="btn-green px-10 py-3 rounded text-sm sm:text-base font-bold shadow transition cursor-pointer">
+          Ballarni kiritiş
+        </button>
+      </div>
+
+      <!-- Bottom 4 Navigation Buttons -->
+      <div class="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+        <button onclick="switchView('archive')" class="bg-[#2c3e50] hover:bg-[#1a252f] text-white px-4 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+          <span>📂</span> Arxiv
+        </button>
+        <button onclick="switchView('students')" class="bg-[#8e44ad] hover:bg-[#732d91] text-white px-4 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+          <span>👤</span> Öquvçilar bazasi
+        </button>
+        <button onclick="switchView('classReport')" class="bg-[#1d6ce0] hover:bg-[#1557b8] text-white px-4 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+          <span>📊</span> Sinflar kesimida Hisobot
+        </button>
+        <button onclick="exitApp()" class="bg-[#c0392b] hover:bg-[#a93226] text-white px-4 py-1.5 rounded text-xs font-semibold inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+          <span>✖</span> Çiqiş
+        </button>
+      </div>
+    </div>
+
+    <!-- VIEW 2: SCORE ENTRY -->
+    <div id="view-entry" class="hidden p-4 sm:p-6 bg-white">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3 mb-4 border-b border-slate-200">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900" id="entryHeaderTitle">Ballarni kiritiş jadvali</h2>
+          <p class="text-xs text-slate-600" id="entrySubTitle">Namunaviy maksimal ballar barcha öquvçilarga avtomatik köçiriladi — har bir katakçani qölda erkin tuzatişingiz mumkin.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="transliterateEntryNames()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-3 py-1.5 rounded text-xs font-bold transition cursor-pointer">
+            🔄 Kirill → Lotin
+          </button>
+          <button onclick="copyTemplateToAllStudents()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 px-3 py-1.5 rounded text-xs font-bold transition cursor-pointer">
+            📋 Namunani barçaga köçiriş
+          </button>
+          <button onclick="clearAllStudentScores()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 px-3 py-1.5 rounded text-xs font-semibold transition cursor-pointer">
+            🧹 Ballarni tozalash (0)
+          </button>
+          <button onclick="switchView('home')" class="bg-slate-600 hover:bg-slate-700 text-white px-3 py-1.5 rounded text-xs font-semibold transition cursor-pointer">
+            ← Orqaga
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-3 flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-2.5 rounded border border-slate-200 text-xs">
+        <div class="flex flex-wrap items-center gap-4">
+          <span>Jami savollar: <strong id="entryQCount">0</strong></span>
+          <span>Maksimal ball yiğ'indisi: <strong id="entryMaxSum" class="text-blue-900 text-sm">0</strong> / <span id="entryLimitVal">50</span></span>
+          <span class="inline-flex items-center gap-1"><span class="w-3 h-3 inline-block bg-sky-200 border border-sky-400"></span> B — Biliş</span>
+          <span class="inline-flex items-center gap-1"><span class="w-3 h-3 inline-block bg-amber-200 border border-amber-400"></span> Q — Qöllaş</span>
+          <span class="inline-flex items-center gap-1"><span class="w-3 h-3 inline-block bg-pink-200 border border-pink-400"></span> M — Mulohaza</span>
+        </div>
+        <div id="limitWarning" class="hidden text-red-600 font-bold">
+          Diqqat! Maksimal ball yiğ'indisi belgilangan limitdan oşib ketdi!
+        </div>
+      </div>
+
+      <div class="overflow-x-auto border border-slate-300 rounded relative">
+        <table class="min-w-full text-xs border-collapse" id="scoreEntryTable"></table>
+      </div>
+
+      <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+        <button onclick="saveToArchive()" class="bg-slate-800 hover:bg-slate-900 text-white px-5 py-2.5 rounded text-xs sm:text-sm font-semibold inline-flex items-center gap-2 transition cursor-pointer">
+          💾 Arxivga saqlaş
+        </button>
+        <button onclick="generateOfficialReport()" class="btn-green px-7 py-2.5 rounded text-xs sm:text-sm font-bold inline-flex items-center gap-2 shadow transition cursor-pointer">
+          📄 Natijalarni köriş va hisobot
+        </button>
+      </div>
+    </div>
+
+    <!-- VIEW 3: OFFICIAL REPORT -->
+    <div id="view-report" class="hidden bg-slate-200 p-2 sm:p-6">
+      <div class="max-w-[210mm] mx-auto mb-4 bg-white p-3 rounded shadow-sm border border-slate-300 flex flex-wrap items-center justify-between gap-2 no-print">
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="switchView('entry')" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded text-xs font-semibold cursor-pointer">
+            ← Ballarni tahrirlaş
+          </button>
+          <button onclick="saveToArchive()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded text-xs font-semibold cursor-pointer">
+            💾 Arxivga saqlaş
+          </button>
+          <div class="flex items-center gap-1.5 bg-slate-100 border border-slate-300 px-2.5 py-1 rounded text-xs">
+            <label for="reportDateInput" class="font-semibold text-slate-700">Sana:</label>
+            <input id="reportDateInput" type="date" onchange="updateReportDateFromToolbar(this.value)" class="bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-medium text-slate-800 focus:outline-none">
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="printReportOnly()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-1.5 rounded text-xs font-bold inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+            🖨️ Çop etiş
+          </button>
+          <button id="btnDownloadPdf" onclick="downloadReportPDF()" class="bg-red-700 hover:bg-red-800 text-white px-4 py-1.5 rounded text-xs font-bold inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+            📄 PDF ga saqlaş
+          </button>
+          <button onclick="exportReportExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-1.5 rounded text-xs font-bold inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+            📊 Excel (.xls) ga xuddi şu dizaynda yuklaş
+          </button>
+        </div>
+      </div>
+
+      <div id="reportPagesContainer">
+        <!-- PAGE 1 -->
+        <div class="report-page" id="reportPage1">
+          <div class="mb-2 border-b border-slate-300 pb-1.5 text-center">
+            <h1 id="repSchoolName" class="text-lg font-extrabold text-slate-900 tracking-tight">Qiziltepa tumani 24-sonli umumiy örta ta'lim maktabi</h1>
+            <p id="repMetaLine" class="text-[11px] text-slate-700 font-medium mt-0.5">Informatika va AT — ÇSB-1 • 9-B • 1-çorak • Sana: 2026-11-18</p>
+          </div>
+          <div id="repMainTableWrapper" class="mt-2"></div>
+          <!-- Signatures exactly 1cm (10mm) below the main table -->
+          <div class="mt-[10mm] text-[10.5px] text-slate-900 space-y-2.5 avoid-break" id="repSignaturesBlock">
+            <div class="flex items-center">
+              <span class="font-semibold">ÖIBDÖ:</span>
+              <span class="inline-block border-b border-slate-700 w-[26mm] mx-3"></span>
+              <span class="font-bold" id="repDeputyName">Rustamov Öktam Sayfiyeviç</span>
+            </div>
+            <div class="flex items-center">
+              <span class="font-semibold">Metodbirlaşma rahbari:</span>
+              <span class="inline-block border-b border-slate-700 w-[26mm] mx-3"></span>
+              <span class="font-bold" id="repMethodHeadName"></span>
+            </div>
+            <div class="flex items-center">
+              <span class="font-semibold">Fan öqituvçisi:</span>
+              <span class="inline-block border-b border-slate-700 w-[26mm] mx-3"></span>
+              <span class="font-bold" id="repTeacherName"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAGE 2 -->
+        <div class="report-page page-break-before" id="reportPage2">
+          <div class="text-center mb-2.5">
+            <h2 class="text-base font-extrabold text-slate-900">Natijalar tahlili</h2>
+            <p id="repAnalysisSub" class="text-[10.5px] text-slate-600 font-medium">Informatika va AT • 9-B • 1-çorak • ÇSB-1</p>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 mb-3 avoid-break">
+            <div class="border border-slate-300 rounded-sm bg-slate-50/70 p-2 text-center border-l-4 border-l-emerald-600">
+              <div id="kpiQuality" class="text-base font-extrabold text-emerald-700">0%</div>
+              <div class="text-[8.5px] text-slate-600 font-medium">Sifat körsatkiçi (4 va 5)</div>
+            </div>
+            <div class="border border-slate-300 rounded-sm bg-slate-50/70 p-2 text-center border-l-4 border-l-teal-600">
+              <div id="kpiMastery" class="text-base font-extrabold text-teal-700">0%</div>
+              <div class="text-[8.5px] text-slate-600 font-medium">Özlaştirish (3, 4, 5)</div>
+            </div>
+            <div class="border border-slate-300 rounded-sm bg-slate-50/70 p-2 text-center border-l-4 border-l-blue-700">
+              <div id="kpiGPA" class="text-base font-extrabold text-blue-800">0.0</div>
+              <div class="text-[8.5px] text-slate-600 font-medium">Örtaça baho</div>
+            </div>
+            <div class="border border-slate-300 rounded-sm bg-slate-50/70 p-2 text-center border-l-4 border-l-amber-500">
+              <div id="kpiHighLow" class="text-base font-extrabold text-slate-800">0 / 0</div>
+              <div class="text-[8.5px] text-slate-600 font-medium">A'loçilar / past</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-12 gap-2.5 mb-3 avoid-break">
+            <div class="col-span-5 border border-slate-300 rounded-sm p-2 bg-white">
+              <div class="text-[10px] font-bold text-slate-800 mb-1">Baholar taqsimoti</div>
+              <div class="flex items-center justify-between gap-1">
+                <div class="relative w-28 h-28 flex-shrink-0">
+                  <canvas id="gradeDonutChart"></canvas>
+                  <div id="donutCenterText" class="absolute inset-0 flex items-center justify-center text-xs font-extrabold text-slate-800 pointer-events-none">0.0</div>
+                </div>
+                <div id="donutLegend" class="text-[8.8px] space-y-1 flex-1 pl-1"></div>
+              </div>
+            </div>
+
+            <div class="col-span-7 border border-slate-300 rounded-sm p-2 bg-white">
+              <div class="text-[10px] font-bold text-slate-800 mb-1">Savollar böyiça özlaştirish (%)</div>
+              <div class="h-32 w-full">
+                <canvas id="questionBarChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2.5 text-[9.5px]">
+            <div>
+              <div class="font-bold text-slate-900 border-l-4 border-emerald-600 pl-2 mb-1 text-[10.5px]" id="titleGrade5">A'loçilar (5 baho) — 0 nafar</div>
+              <div id="tableGrade5Wrapper"></div>
+            </div>
+            <div>
+              <div class="font-bold text-slate-900 border-l-4 border-blue-700 pl-2 mb-1 text-[10.5px]" id="titleGrade4">Yaxşi özlaştiruvçilar (4 baho) — 0 nafar</div>
+              <div id="tableGrade4Wrapper"></div>
+            </div>
+            <div>
+              <div class="font-bold text-slate-900 border-l-4 border-amber-500 pl-2 mb-1 text-[10.5px]" id="titleGrade3">Qoniqarli özlaştiruvçilar (3 baho) — 0 nafar</div>
+              <div id="tableGrade3Wrapper"></div>
+            </div>
+            <div>
+              <div class="font-bold text-slate-900 border-l-4 border-red-600 pl-2 mb-1 text-[10.5px]" id="titleGrade2">Past özlaştiruvçilar (2 baho) — 0 nafar</div>
+              <div id="tableGrade2Wrapper"></div>
+            </div>
+            <div class="pt-0.5 avoid-break">
+              <div class="font-bold text-slate-900 border-l-4 border-blue-800 pl-2 mb-1 text-[10.5px]">Metodik xulosa</div>
+              <p id="methodConclusionText" class="text-[9.2px] text-slate-800 leading-snug bg-slate-50 p-2 rounded border border-slate-200"></p>
+            </div>
+            <div class="pt-0.5 avoid-break">
+              <div class="font-bold text-slate-900 border-l-4 border-teal-600 pl-2 mb-1 text-[10.5px]">Tavsiyalar</div>
+              <p id="methodRecommendationsText" class="text-[9.2px] text-slate-800 leading-snug"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: ARCHIVE -->
+    <div id="view-archive" class="hidden p-5 sm:p-8 bg-white">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">📂 Saqlangan hisobotlar arxivi</h2>
+          <p class="text-xs text-slate-600">Avval saqlangan BSB va ÇSB natijalarini köriş, tahrirlaş yoki töğridan-töğri PDF qiliş</p>
+        </div>
+        <button onclick="switchView('home')" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-1.5 rounded text-xs font-semibold">← Boş sahifa</button>
+      </div>
+      <div id="archiveListContainer" class="space-y-2.5"></div>
+    </div>
+
+    <!-- VIEW 5: STUDENTS DATABASE -->
+    <div id="view-students" class="hidden p-5 sm:p-8 bg-white">
+      <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-200">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">👤 Öquvçilar bazasi (5–11-sinflar)</h2>
+          <p class="text-xs text-slate-600">5-sinfdan 11-sinfgaça barcha sinflar (va 7-sinf 1-/2-guruhlar) uçun öquvçilar röyxatini yarating va saqlang</p>
+        </div>
+        <button onclick="switchView('home')" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-1.5 rounded text-xs font-semibold">← Boş sahifa</button>
+      </div>
+
+      <div class="bg-slate-50 border border-slate-300 rounded p-3 mb-4 flex flex-wrap items-center gap-2.5 text-xs">
+        <span class="font-bold text-slate-800">Yangi sinf yaratish:</span>
+        <select id="dbNewGrade" onchange="onDbNewGradeChange()" class="border border-slate-400 rounded px-2 py-1 bg-white font-semibold">
+          <option value="5">5-sinf</option>
+          <option value="6">6-sinf</option>
+          <option value="7">7-sinf</option>
+          <option value="8">8-sinf</option>
+          <option value="9">9-sinf</option>
+          <option value="10">10-sinf</option>
+          <option value="11">11-sinf</option>
+        </select>
+        <select id="dbNewSection" class="border border-slate-400 rounded px-2 py-1 bg-white font-semibold">
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="D">D</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="G">G</option>
+          <option value="V">V</option>
+        </select>
+        <select id="dbNewGroup" class="hidden border border-indigo-400 rounded px-2 py-1 bg-indigo-50 font-bold text-indigo-900">
+          <option value="">Umumiy sinf</option>
+          <option value="1-guruh">1-guruh (Ingliz/Rus/Inf)</option>
+          <option value="2-guruh">2-guruh (Ingliz/Rus/Inf)</option>
+        </select>
+        <button onclick="createNewClassInDb()" class="bg-purple-700 hover:bg-purple-800 text-white px-3.5 py-1 rounded font-bold transition">+ Sinf qöşiş</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div class="md:col-span-4 border border-slate-300 rounded p-3 bg-slate-50">
+          <div class="font-bold text-xs text-slate-700 mb-2">Sinflar röyxati (5–11)</div>
+          <div id="dbClassList" class="space-y-1 max-h-[380px] overflow-y-auto"></div>
+        </div>
+        <div class="md:col-span-8 border border-slate-300 rounded p-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <span class="font-bold text-xs text-slate-800" id="dbSelectedClassTitle">Sinf öquvçilari röyxati</span>
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="transliterateDbStudents()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-2.5 py-1 rounded text-xs font-bold">🔄 Kirill → Lotin</button>
+              <button onclick="addStudentToDb()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded text-xs font-semibold">+ Öquvçi qöşiş</button>
+              <button onclick="deleteSelectedClassFromDb()" class="bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 px-2.5 py-1 rounded text-xs font-semibold">Sinfni öçiriş</button>
+            </div>
+          </div>
+          <div id="dbStudentsEditor" class="space-y-1.5 max-h-80 overflow-y-auto pr-1"></div>
+          <div class="mt-3 pt-2 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+            <span class="text-[11px] text-slate-500" id="dbStudentCountBadge">Jami: 0 nafar öquvçi</span>
+            <div class="flex gap-2">
+              <button onclick="saveDbChanges()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-1.5 rounded text-xs font-bold">💾 Röyxatni saqlaş</button>
+              <button onclick="loadDbClassToEntry()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-1.5 rounded text-xs font-bold">Uşbu röyxatni baholaşga yuklaş →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 6: CLASS REPORT -->
+    <div id="view-classReport" class="hidden p-5 sm:p-8 bg-white">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">📊 Sinflar kesimida umumiy hisobot</h2>
+          <p class="text-xs text-slate-600">Arxivdagi barcha nazorat işlari böyiça qiyosiy tahlil</p>
+        </div>
+        <button onclick="switchView('home')" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-1.5 rounded text-xs font-semibold">← Boş sahifa</button>
+      </div>
+      <div id="classSummaryContainer"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="max-w-6xl mx-auto mt-3 px-2 flex flex-wrap items-center justify-between text-[11px] text-slate-500 no-print">
+    <span>© 2026 BSB / CHSB Baholaş Dasturi V2.0 — Muallif: RUSTAMOV ÖKTAM SAYFIYEVIÇ</span>
+    <a href="https://t.me/softstarup" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline font-semibold">Telegram kanalimiz: @softstarup</a>
+  </div>
+
+  <!-- GUIDE MODAL -->
+  <div id="guideModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-md max-w-xl w-full p-5 shadow-xl border border-slate-300">
+      <div class="flex items-center justify-between border-b pb-2 mb-3">
+        <h3 class="font-bold text-base text-blue-950">Dasturdan foydalaniş qöllanmasi</h3>
+        <button onclick="closeGuideModal()" class="text-slate-500 hover:text-slate-800 font-bold text-lg">✕</button>
+      </div>
+      <ol class="list-decimal list-inside space-y-2 text-xs sm:text-sm text-slate-700 leading-relaxed">
+        <li><strong>Boş sahifa:</strong> Fan turi, Nazorat turi (BSB uçun maks. 50 ball, ÇSB uçun maks. 40 ball), Sinf (7-sinfda Ingliz tili, Rus tili yoki Informatika tanlansa 1-guruh/2-guruh ni ham tanlaş mumkin), Öquvçilar soni, Çorak, Sana va Savollar sonini tanlang.</li>
+        <li><strong>Baholaş mezonlari:</strong>
+          <ul class="list-disc list-inside pl-4 mt-1 text-xs text-slate-600">
+            <li><strong>ÇSB (40 ballik):</strong> 0–11 ball = <strong>2</strong>, 12–26 ball = <strong>3</strong>, 27–36 ball = <strong>4</strong>, 37–40 ball = <strong>5</strong>.</li>
+            <li><strong>BSB (50 ballik):</strong> 0–39% = <strong>2</strong>, 40–70% = <strong>3</strong>, 71–85% = <strong>4</strong>, 86–100% = <strong>5</strong>.</li>
+          </ul>
+        </li>
+        <li><strong>Boşqa qurilmaga ötkaziş:</strong> Yuqoridagi <em>«🔑 Boşqa qurilma kodi»</em> tugmasi orqali maxsus kod olib, boşqa kompyuterda barcha sinf röyxatlari va arxivlarni bir zumda yuklaşingiz mumkin.</li>
+        <li><strong>Rasmiy hisobot va eksport:</strong> Rasmiy hisobotni <em>«Çop etiş»</em>, <em>«PDF ga saqlaş»</em> yoki <em>«Excel (.xls) ga yuklaş»</em> orqali olişingiz mumkin.</li>
+      </ol>
+      <div class="mt-4 pt-3 border-t flex items-center justify-between text-xs text-slate-500">
+        <span>Muallif: <strong>RUSTAMOV ÖKTAM SAYFIYEVIÇ</strong></span>
+        <div class="flex items-center gap-3">
+          <a href="https://t.me/softstarup" target="_blank" rel="noopener noreferrer" class="text-blue-700 hover:underline font-bold">Telegram: @softstarup</a>
+          <button onclick="closeGuideModal()" class="bg-blue-900 text-white px-4 py-1.5 rounded font-semibold">Tuşunarli</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEVICE TRANSFER MODAL -->
+  <div id="transferModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-md max-w-xl w-full p-5 shadow-xl border border-slate-300">
+      <div class="flex items-center justify-between border-b pb-2 mb-3">
+        <h3 class="font-bold text-base text-indigo-950">🔑 Boşqa qurilmalardan foydalaniş kodi</h3>
+        <button onclick="closeTransferModal()" class="text-slate-500 hover:text-slate-800 font-bold text-lg">✕</button>
+      </div>
+      <div class="space-y-4 text-xs">
+        <div class="bg-indigo-50/70 border border-indigo-200 rounded p-3">
+          <div class="font-bold text-indigo-950 mb-1">1. Uşbu kompyuterdagi ma'lumotlar uçun maxsus kod oliş:</div>
+          <p class="text-slate-600 mb-2">Barcha 5–11-sinf öquvçilar röyxati, arxivdagi hisobotlar va sozlamalar bitta maxsus kodga aylanadi.</p>
+          <div class="flex gap-2">
+            <input id="exportSyncCodeInput" type="text" readonly class="w-full border border-slate-400 bg-white px-2.5 py-1.5 rounded font-mono text-[11px]" placeholder="Kod yaratilmoqda...">
+            <button onclick="copySyncCode()" class="shrink-0 bg-indigo-700 hover:bg-indigo-800 text-white px-3.5 py-1.5 rounded font-bold">Nusxa oliş</button>
+          </div>
+        </div>
+        <div class="bg-emerald-50/70 border border-emerald-200 rounded p-3">
+          <div class="font-bold text-emerald-950 mb-1">2. Boşqa kompyuterdan kelgan kodni kiritiş:</div>
+          <p class="text-slate-600 mb-2">Boşqa qurilmada olingan maxsus kodni quyiga joylaştirib, «Ma'lumotlarni yuklaş» tugmasini bosing.</p>
+          <textarea id="importSyncCodeInput" rows="3" class="w-full border border-slate-400 bg-white p-2 rounded font-mono text-[11px]" placeholder="Boşqa qurilma kodini şu yerga joylaştiring..."></textarea>
+          <div class="mt-2 flex justify-end">
+            <button onclick="applySyncCode()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-1.5 rounded font-bold">📥 Ma'lumotlarni yuklaş</button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 pt-2 border-t flex justify-end">
+        <button onclick="closeTransferModal()" class="bg-slate-600 text-white px-4 py-1.5 rounded text-xs font-semibold">Yopiş</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PROTECTED_PASSWORD = "RUS12472@&mak";
+    const DEFAULT_SCHOOL_NAME = "Qiziltepa tumani 24-sonli umumiy örta ta'lim maktabi";
+    const DEFAULT_DEPUTY_NAME = "Rustamov Öktam Sayfiyeviç";
+
+    const appState = {
+      school: DEFAULT_SCHOOL_NAME,
+      deputy: DEFAULT_DEPUTY_NAME,
+      teacher: "",
+      methodHead: "",
+      subject: "",
+      controlType: "",
+      grade: "5",
+      section: "A",
+      group: "",
+      quarter: "",
+      date: new Date().toISOString().slice(0, 10),
+      questions: [],
+      students: [],
+      editingArchiveId: null
+    };
+
+    const STORAGE_KEYS = {
+      ARCHIVE: 'bsb_chsb_archive_v3',
+      STUDENTS_DB: 'bsb_chsb_students_db_v3',
+      PROTECTED_SETTINGS: 'bsb_chsb_protected_v3'
+    };
+
+    let donutChartInstance = null;
+    let barChartInstance = null;
+
+    function cyrillicToLatin(text) {
+      if (!text) return "";
+      let s = String(text);
+      const map = [
+        ['Ё', 'Yo'], ['ё', 'yo'], ['Ц', 'Ts'], ['ц', 'ts'], ['Ч', 'Ç'], ['ч', 'ç'],
+        ['Ш', 'Ş'], ['ш', 'ş'], ['Щ', 'Ş'], ['щ', 'ş'], ['Ю', 'Yu'], ['ю', 'yu'],
+        ['Я', 'Ya'], ['я', 'ya'], ['Ў', 'Ö'], ['ў', 'ö'], ['Қ', 'Q'], ['қ', 'q'],
+        ['Ғ', 'Ğ'], ['ғ', 'ğ'], ['Ҳ', 'H'], ['ҳ', 'h'], ['А', 'A'], ['а', 'a'],
+        ['Б', 'B'], ['б', 'b'], ['В', 'V'], ['в', 'v'], ['Г', 'G'], ['г', 'g'],
+        ['Д', 'D'], ['д', 'd'], ['Е', 'E'], ['е', 'e'], ['Ж', 'J'], ['ж', 'j'],
+        ['З', 'Z'], ['з', 'z'], ['И', 'I'], ['и', 'i'], ['Й', 'Y'], ['й', 'y'],
+        ['К', 'K'], ['к', 'k'], ['Л', 'L'], ['л', 'l'], ['М', 'M'], ['м', 'm'],
+        ['Н', 'N'], ['н', 'n'], ['О', 'O'], ['о', 'o'], ['П', 'P'], ['п', 'p'],
+        ['Р', 'R'], ['р', 'r'], ['С', 'S'], ['с', 's'], ['Т', 'T'], ['т', 't'],
+        ['У', 'U'], ['у', 'u'], ['Ф', 'F'], ['ф', 'f'], ['Х', 'X'], ['х', 'x'],
+        ['Ъ', "'"], ['ъ', "'"], ['Ь', ''], ['ь', ''], ['Э', 'E'], ['э', 'e'],
+        ['Ы', 'I'], ['ы', 'i']
+      ];
+      for (const [cyr, lat] of map) {
+        s = s.split(cyr).join(lat);
+      }
+      return s;
+    }
+
+    function normalizeUz(text) {
+      if (!text) return "";
+      let s = cyrillicToLatin(String(text));
+      s = s.replace(/O['‘’`ʻʼ]/g, 'Ö').replace(/o['‘’`ʻʼ]/g, 'ö');
+      s = s.replace(/G['‘’`ʻʼ]/g, 'Ğ').replace(/g['‘’`ʻʼ]/g, 'ğ');
+      s = s.replace(/Sh/g, 'Ş').replace(/SH/g, 'Ş').replace(/sh/g, 'ş');
+      s = s.replace(/Ch/g, 'Ç').replace(/CH/g, 'Ç').replace(/ch/g, 'ç');
+      return s;
+    }
+
+    function selectGroupOption(grp) {
+      document.getElementById('selectGroup').value = grp;
+      appState.group = grp;
+      const b1 = document.getElementById('btnGroup1');
+      const b2 = document.getElementById('btnGroup2');
+      if (b1 && b2) {
+        if (grp === '1-guruh') {
+          b1.className = "px-3 py-1 rounded text-xs font-bold border border-indigo-600 bg-indigo-700 text-white shadow-sm transition cursor-pointer";
+          b2.className = "px-3 py-1 rounded text-xs font-bold border border-indigo-400 bg-white text-indigo-900 hover:bg-indigo-100 transition cursor-pointer";
+        } else {
+          b2.className = "px-3 py-1 rounded text-xs font-bold border border-indigo-600 bg-indigo-700 text-white shadow-sm transition cursor-pointer";
+          b1.className = "px-3 py-1 rounded text-xs font-bold border border-indigo-400 bg-white text-indigo-900 hover:bg-indigo-100 transition cursor-pointer";
+        }
+      }
+    }
+
+    function updateGroupVisibility() {
+      const g = document.getElementById('selectGrade').value;
+      const s = document.getElementById('selectSubject').value;
+      const container = document.getElementById('groupSelectorContainer');
+      const groupSubjects = ['Ingliz tili', 'Rus tili', 'Informatika va AT'];
+      if (g === '7' && groupSubjects.includes(s)) {
+        container.classList.remove('hidden');
+        const currentGrp = document.getElementById('selectGroup').value || '1-guruh';
+        selectGroupOption(currentGrp);
+      } else {
+        container.classList.add('hidden');
+        appState.group = "";
+      }
+    }
+
+    function getActiveMaxLimit(controlType) {
+      const ct = normalizeUz(controlType || "");
+      return ct.startsWith("ÇSB") ? 40 : 50;
+    }
+
+    function calculateGradeValue(totalScore, maxPossible, controlType) {
+      const ct = normalizeUz(controlType || appState.controlType || "");
+      if (ct.startsWith("ÇSB")) {
+        const sc = Number(totalScore) || 0;
+        if (sc >= 37) return 5;
+        if (sc >= 27) return 4;
+        if (sc >= 12) return 3;
+        return 2;
+      }
+      const pct = maxPossible > 0 ? Math.round((totalScore / maxPossible) * 100) : 0;
+      if (pct >= 86) return 5;
+      if (pct >= 71) return 4;
+      if (pct >= 40) return 3;
+      return 2;
+    }
+
+    function getDefaultStudentsDB() {
+      const db = {};
+      for (let g = 5; g <= 11; g++) {
+        db[`${g}-A`] = [];
+      }
+      return db;
+    }
+
+    function initCleanData() {
+      const savedProtected = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROTECTED_SETTINGS) || 'null');
+      if (savedProtected && savedProtected.school) {
+        appState.school = normalizeUz(savedProtected.school);
+        appState.deputy = normalizeUz(savedProtected.deputy || DEFAULT_DEPUTY_NAME);
+      }
+      document.getElementById('inputSchool').value = appState.school;
+      document.getElementById('inputDeputy').value = appState.deputy;
+      document.getElementById('inputDate').value = appState.date;
+      if (!localStorage.getItem(STORAGE_KEYS.ARCHIVE)) {
+        localStorage.setItem(STORAGE_KEYS.ARCHIVE, JSON.stringify([]));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.STUDENTS_DB)) {
+        localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(getDefaultStudentsDB()));
+      }
+      onControlTypeChange();
+      updateGroupVisibility();
+    }
+
+    function requestProtectedUnlock() {
+      const schoolInput = document.getElementById('inputSchool');
+      const deputyInput = document.getElementById('inputDeputy');
+      const btn = document.getElementById('btnUnlockProtected');
+      if (!schoolInput.readOnly) {
+        appState.school = normalizeUz(schoolInput.value.trim()) || DEFAULT_SCHOOL_NAME;
+        appState.deputy = normalizeUz(deputyInput.value.trim()) || DEFAULT_DEPUTY_NAME;
+        schoolInput.value = appState.school;
+        deputyInput.value = appState.deputy;
+        localStorage.setItem(STORAGE_KEYS.PROTECTED_SETTINGS, JSON.stringify({ school: appState.school, deputy: appState.deputy }));
+        schoolInput.readOnly = true;
+        deputyInput.readOnly = true;
+        schoolInput.className = "w-full border border-slate-400 bg-slate-100 text-slate-700 px-2.5 py-1 text-xs sm:text-sm focus:outline-none";
+        deputyInput.className = "w-full border border-slate-400 bg-slate-100 text-slate-700 px-2.5 py-1 text-xs sm:text-sm focus:outline-none";
+        btn.textContent = "🔒 Özgartiriş";
+        alert("Maktab nomi va ÖIBDÖ ma'lumotlari saqlandi va qulflandi.");
+        return;
+      }
+      const entered = prompt("Maktab nomi va ÖIBDÖ familiyasini özgartiriş uçun maxsus parolni kiriting:");
+      if (entered === null) return;
+      if (entered === PROTECTED_PASSWORD) {
+        schoolInput.readOnly = false;
+        deputyInput.readOnly = false;
+        schoolInput.className = "w-full border-2 border-emerald-600 bg-white text-slate-900 px-2.5 py-1 text-xs sm:text-sm focus:outline-none";
+        deputyInput.className = "w-full border-2 border-emerald-600 bg-white text-slate-900 px-2.5 py-1 text-xs sm:text-sm focus:outline-none";
+        btn.textContent = "💾 Saqlaş";
+        schoolInput.focus();
+      } else {
+        alert("Noto'ğri parol! Maktab nomi va ÖIBDÖ ma'lumotlarini özgartirişga ruxsat berilmadi.");
+      }
+    }
+
+    function openTransferModal() {
+      const payload = {
+        v: 2,
+        protected: { school: appState.school, deputy: appState.deputy },
+        db: JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}'),
+        archive: JSON.parse(localStorage.getItem(STORAGE_KEYS.ARCHIVE) || '[]')
+      };
+      const jsonStr = JSON.stringify(payload);
+      const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
+      document.getElementById('exportSyncCodeInput').value = "BSB2-" + b64;
+      document.getElementById('importSyncCodeInput').value = "";
+      document.getElementById('transferModal').classList.remove('hidden');
+    }
+
+    function closeTransferModal() { document.getElementById('transferModal').classList.add('hidden'); }
+
+    function copySyncCode() {
+      const inp = document.getElementById('exportSyncCodeInput');
+      inp.select();
+      inp.setSelectionRange(0, 999999);
+      navigator.clipboard?.writeText(inp.value);
+      alert("Maxsus kod nusxalandi! Endi uşbu kodni boşqa kompyuterda kiritişingiz mumkin.");
+    }
+
+    function applySyncCode() {
+      let raw = document.getElementById('importSyncCodeInput').value.trim();
+      if (!raw) { alert("Iltimos, avval boşqa qurilmadan olingan kodni joylaştiring!"); return; }
+      try {
+        if (raw.startsWith("BSB2-")) raw = raw.slice(5);
+        const jsonStr = decodeURIComponent(escape(atob(raw)));
+        const parsed = JSON.parse(jsonStr);
+        if (parsed.db) localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(parsed.db));
+        if (parsed.archive) localStorage.setItem(STORAGE_KEYS.ARCHIVE, JSON.stringify(parsed.archive));
+        if (parsed.protected) {
+          localStorage.setItem(STORAGE_KEYS.PROTECTED_SETTINGS, JSON.stringify(parsed.protected));
+          appState.school = parsed.protected.school || DEFAULT_SCHOOL_NAME;
+          appState.deputy = parsed.protected.deputy || DEFAULT_DEPUTY_NAME;
+          document.getElementById('inputSchool').value = appState.school;
+          document.getElementById('inputDeputy').value = appState.deputy;
+        }
+        alert("Boşqa qurilmadagi barcha sinf röyxatlari va arxiv ma'lumotlari muvaffaqiyatli yuklandi!");
+        closeTransferModal();
+      } catch (e) {
+        alert("Kod formati noto'ğri yoki buzilgan. Iltimos, kodni töliq nusxalab qayta urinib köring.");
+      }
+    }
+
+    function onControlTypeChange() {
+      const ct = document.getElementById('selectControlType').value;
+      const limit = getActiveMaxLimit(ct);
+      document.getElementById('homeLimitDisplay').textContent = limit;
+      const hint = document.getElementById('limitHintText');
+      if (ct.startsWith("ÇSB")) {
+        hint.textContent = "ÇSB tanlandi: maksimal ball limiti — 40 ball (0-11=2, 12-26=3, 27-36=4, 37-40=5).";
+      } else if (ct.startsWith("BSB")) {
+        hint.textContent = "BSB tanlandi: maksimal ball limiti — 50 ball (86%+=5, 71-85%=4, 40-70%=3, 0-39%=2).";
+      } else {
+        hint.textContent = "BSB uçun maksimal ball — 50 ball, ÇSB uçun maksimal ball — 40 ball.";
+      }
+    }
+
+    function switchView(viewName) {
+      ['home', 'entry', 'report', 'archive', 'students', 'classReport'].forEach(v => {
+        document.getElementById('view-' + v).classList.add('hidden');
+      });
+      document.getElementById('view-' + viewName).classList.remove('hidden');
+      if (viewName === 'archive') renderArchiveView();
+      if (viewName === 'students') renderStudentsDbView();
+      if (viewName === 'classReport') renderClassSummaryView();
+    }
+
+    function openGuideModal() { document.getElementById('guideModal').classList.remove('hidden'); }
+    function closeGuideModal() { document.getElementById('guideModal').classList.add('hidden'); }
+    function checkUpdates() {
+      alert("Sizda eng sönggi versiya (BSB / CHSB — PDF V2.0) örnatilgan.
+Muallif: RUSTAMOV ÖKTAM SAYFIYEVIÇ
+Telegram: @softstarup");
+    }
+    function exitApp() {
+      if (confirm("Dastur oynasini yopmoqçimisiz? Barcha saqlangan ma'lumotlar xotirada qoladi.")) {
+        window.close();
+      }
+    }
+
+    document.getElementById('selectGrade').addEventListener('change', updateGroupVisibility);
+    document.getElementById('selectSubject').addEventListener('change', updateGroupVisibility);
+
+    function syncFormToState() {
+      const schoolInput = document.getElementById('inputSchool');
+      const deputyInput = document.getElementById('inputDeputy');
+      appState.school = normalizeUz(schoolInput.value.trim()) || DEFAULT_SCHOOL_NAME;
+      appState.deputy = normalizeUz(deputyInput.value.trim()) || DEFAULT_DEPUTY_NAME;
+      appState.teacher = normalizeUz(document.getElementById('inputTeacher').value.trim()) || "Kiritilmagan";
+      appState.methodHead = normalizeUz(document.getElementById('inputMethodHead').value.trim()) || "Kiritilmagan";
+      appState.subject = normalizeUz(document.getElementById('selectSubject').value) || "Informatika va AT";
+      appState.controlType = normalizeUz(document.getElementById('selectControlType').value) || "BSB-1";
+      appState.grade = document.getElementById('selectGrade').value || "5";
+      appState.section = document.getElementById('selectSection').value || "A";
+      const groupSubjects = ['Ingliz tili', 'Rus tili', 'Informatika va AT'];
+      if (appState.grade === '7' && groupSubjects.includes(appState.subject)) {
+        appState.group = document.getElementById('selectGroup').value || '1-guruh';
+      } else {
+        appState.group = "";
+      }
+      appState.quarter = normalizeUz(document.getElementById('selectQuarter').value) || "1-çorak";
+      appState.date = document.getElementById('inputDate').value || new Date().toISOString().slice(0, 10);
+    }
+
+    function goToEntryView() {
+      syncFormToState();
+      appState.editingArchiveId = null;
+      const limit = getActiveMaxLimit(appState.controlType);
+      const sCount = parseInt(document.getElementById('inputStudentCount').value, 10);
+      const qCount = parseInt(document.getElementById('inputQuestionCount').value, 10);
+      const finalQ = (!isNaN(qCount) && qCount > 0) ? Math.min(qCount, 30) : 10;
+      const perQ = Number((limit / finalQ).toFixed(2));
+      const newQuestions = [];
+      for (let i = 0; i < finalQ; i++) {
+        let level = 'Q';
+        if (i === 0 || i === 3 || i === 6) level = 'B';
+        else if (i === finalQ - 1 || i === finalQ - 3) level = 'M';
+        newQuestions.push({ num: i + 1, max: perQ, level });
+      }
+      const currentSum = newQuestions.reduce((acc, q) => acc + q.max, 0);
+      const diff = Number((limit - currentSum).toFixed(2));
+      if (Math.abs(diff) > 0 && newQuestions.length > 0) {
+        newQuestions[newQuestions.length - 1].max = Number((newQuestions[newQuestions.length - 1].max + diff).toFixed(2));
+      }
+      appState.questions = newQuestions;
+
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      const groupKey = appState.group ? `${appState.grade}-${appState.section} (${appState.group})` : null;
+      const baseKey = `${appState.grade}-${appState.section}`;
+      const savedNames = (groupKey && db[groupKey] && db[groupKey].length > 0) ? db[groupKey] : (db[baseKey] || []);
+      const finalS = (!isNaN(sCount) && sCount > 0) ? Math.min(sCount, 50) : (savedNames.length > 0 ? savedNames.length : 10);
+
+      // Copy template max scores directly into all student rows so teacher can manually adjust
+      const templateScores = newQuestions.map(q => q.max);
+      const newStudents = [];
+      for (let i = 0; i < finalS; i++) {
+        const name = savedNames[i] ? normalizeUz(savedNames[i]) : `${i + 1}-öquvçi F.I.Ş`;
+        newStudents.push({ name, scores: [...templateScores] });
+      }
+      appState.students = newStudents;
+      renderScoreEntryTable();
+      switchView('entry');
+    }
+
+    function transliterateEntryNames() {
+      appState.students.forEach(st => { st.name = normalizeUz(st.name); });
+      renderScoreEntryTable();
+    }
+
+    function copyTemplateToAllStudents() {
+      const templateScores = appState.questions.map(q => Number(q.max) || 0);
+      appState.students.forEach(st => {
+        st.scores = [...templateScores];
+      });
+      renderScoreEntryTable();
+    }
+
+    function clearAllStudentScores() {
+      appState.students.forEach(st => {
+        st.scores = new Array(appState.questions.length).fill(0);
+      });
+      renderScoreEntryTable();
+    }
+
+    function renderScoreEntryTable() {
+      const table = document.getElementById('scoreEntryTable');
+      const limit = getActiveMaxLimit(appState.controlType);
+      const grpSuffix = appState.group ? ` (${appState.group})` : '';
+      document.getElementById('entryHeaderTitle').textContent = `${appState.grade}-${appState.section}${grpSuffix} sinf — ${appState.subject} (${appState.controlType}, ${appState.quarter})`;
+      document.getElementById('entryQCount').textContent = appState.questions.length;
+      document.getElementById('entryLimitVal').textContent = limit;
+
+      let html = `
+        <thead>
+          <tr class="bg-[#183661] text-white">
+            <th class="border border-slate-400 px-1.5 py-1.5 w-8 text-center">№</th>
+            <th class="border border-slate-400 px-2 py-1.5 min-w-[155px] text-left">Öquvçining F.I.Ş</th>
+      `;
+      appState.questions.forEach((q, idx) => {
+        const bgClass = q.level === 'B' ? 'bg-sky-800' : (q.level === 'M' ? 'bg-pink-900' : 'bg-amber-800');
+        html += `
+          <th class="border border-slate-400 px-1 py-1 text-center min-w-[46px] ${bgClass}">
+            <div class="font-bold text-[11px]">${idx + 1}</div>
+            <select onchange="updateQuestionLevel(${idx}, this.value)" class="mt-0.5 text-[10px] text-slate-900 bg-white rounded px-0.5 font-bold">
+              <option value="B" ${q.level === 'B' ? 'selected' : ''}>B</option>
+              <option value="Q" ${q.level === 'Q' ? 'selected' : ''}>Q</option>
+              <option value="M" ${q.level === 'M' ? 'selected' : ''}>M</option>
+            </select>
+          </th>
+        `;
+      });
+      html += `
+            <th class="border border-slate-400 px-1.5 py-1.5 w-12 text-center bg-slate-800 sticky right-[88px] z-10">Jami</th>
+            <th class="border border-slate-400 px-1 py-1.5 w-11 text-center bg-slate-800 sticky right-[44px] z-10">%</th>
+            <th class="border border-slate-400 px-1 py-1.5 w-11 text-center bg-slate-800 sticky right-0 z-10">Baho</th>
+          </tr>
+          <tr class="bg-slate-200 font-bold text-slate-800">
+            <td class="border border-slate-400 px-2 py-1 text-center" colspan="2">Namuna / Maksimal ball:</td>
+      `;
+      appState.questions.forEach((q, idx) => {
+        html += `
+          <td class="border border-slate-400 p-0.5 text-center">
+            <input type="number" step="0.1" min="0" max="${limit}" value="${q.max}"
+              onfocus="this.select()"
+              onchange="updateQuestionMax(${idx}, this.value)"
+              class="w-full text-center font-bold text-blue-900 bg-white border border-slate-300 rounded py-0.5 text-xs">
+          </td>
+        `;
+      });
+      html += `
+            <td class="border border-slate-400 px-1 py-1 text-center text-blue-900 bg-slate-200 sticky right-[88px] z-10" id="entryTableMaxTotal">0</td>
+            <td class="border border-slate-400 px-1 py-1 text-center bg-slate-200 sticky right-[44px] z-10">100%</td>
+            <td class="border border-slate-400 px-1 py-1 text-center bg-slate-200 sticky right-0 z-10">5</td>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+      appState.students.forEach((st, sIdx) => {
+        html += `
+          <tr class="hover:bg-blue-50/40 bg-white">
+            <td class="border border-slate-300 px-1 py-1 text-center font-medium text-slate-600">${sIdx + 1}</td>
+            <td class="border border-slate-300 p-0.5">
+              <input type="text" value="${escapeHtml(st.name)}"
+                onchange="appState.students[${sIdx}].name = normalizeUz(this.value)"
+                class="w-full px-1.5 py-0.5 text-xs font-medium text-slate-900 focus:bg-yellow-50 focus:outline-none">
+            </td>
+        `;
+        appState.questions.forEach((q, qIdx) => {
+          const val = st.scores[qIdx] !== undefined ? st.scores[qIdx] : 0;
+          html += `
+            <td class="border border-slate-300 p-0.5 text-center">
+              <input type="number" step="0.1" min="0" max="${q.max}" value="${val}"
+                onfocus="this.select()"
+                oninput="updateStudentScore(${sIdx}, ${qIdx}, this.value)"
+                class="w-full text-center text-xs py-0.5 focus:bg-yellow-50 focus:outline-none">
+            </td>
+          `;
+        });
+        html += `
+            <td class="border border-slate-300 px-1 py-1 text-center font-bold text-slate-900 bg-white sticky right-[88px] z-10" id="stTotal_${sIdx}">0</td>
+            <td class="border border-slate-300 px-1 py-1 text-center font-semibold text-slate-700 bg-white sticky right-[44px] z-10" id="stPct_${sIdx}">0%</td>
+            <td class="border border-slate-300 px-1 py-1 text-center font-extrabold sticky right-0 z-10" id="stGrade_${sIdx}">2</td>
+          </tr>
+        `;
+      });
+      html += `</tbody>`;
+      table.innerHTML = html;
+      recalculateEntryTotals();
+    }
+
+    function updateQuestionLevel(qIdx, val) {
+      appState.questions[qIdx].level = val;
+      renderScoreEntryTable();
+    }
+
+    function updateQuestionMax(qIdx, val) {
+      const oldMax = appState.questions[qIdx].max;
+      const parsed = parseFloat(val);
+      const newMax = isNaN(parsed) || parsed < 0 ? 0 : parsed;
+      appState.questions[qIdx].max = newMax;
+      // Sync student scores that matched oldMax (or exceeded newMax)
+      appState.students.forEach(st => {
+        if (st.scores[qIdx] === oldMax || st.scores[qIdx] > newMax) {
+          st.scores[qIdx] = newMax;
+        }
+      });
+      renderScoreEntryTable();
+    }
+
+    function updateStudentScore(sIdx, qIdx, val) {
+      let parsed = parseFloat(val);
+      const maxQ = appState.questions[qIdx].max;
+      if (isNaN(parsed) || parsed < 0) parsed = 0;
+      if (parsed > maxQ) parsed = maxQ;
+      appState.students[sIdx].scores[qIdx] = parsed;
+      recalculateEntryTotals();
+    }
+
+    function recalculateEntryTotals() {
+      const limit = getActiveMaxLimit(appState.controlType);
+      const maxSum = Number(appState.questions.reduce((acc, q) => acc + (Number(q.max) || 0), 0).toFixed(2));
+      document.getElementById('entryMaxSum').textContent = maxSum;
+      document.getElementById('homeMaxSum').textContent = maxSum;
+      const tableMaxEl = document.getElementById('entryTableMaxTotal');
+      if (tableMaxEl) tableMaxEl.textContent = maxSum;
+
+      const warnEl = document.getElementById('limitWarning');
+      if (maxSum > limit + 0.01) warnEl.classList.remove('hidden');
+      else warnEl.classList.add('hidden');
+
+      appState.students.forEach((st, sIdx) => {
+        const total = Number(st.scores.reduce((acc, s) => acc + (Number(s) || 0), 0).toFixed(2));
+        const pct = maxSum > 0 ? Math.round((total / maxSum) * 100) : 0;
+        const grade = calculateGradeValue(total, maxSum, appState.controlType);
+        const totEl = document.getElementById(`stTotal_${sIdx}`);
+        const pctEl = document.getElementById(`stPct_${sIdx}`);
+        const grdEl = document.getElementById(`stGrade_${sIdx}`);
+        if (totEl) totEl.textContent = formatNum(total);
+        if (pctEl) pctEl.textContent = pct + '%';
+        if (grdEl) {
+          grdEl.textContent = grade;
+          grdEl.className = 'border border-slate-300 px-1 py-1 text-center font-extrabold sticky right-0 z-10 ' +
+            (grade === 5 ? 'text-emerald-700 bg-emerald-50' : grade === 4 ? 'text-blue-700 bg-blue-50' : grade === 3 ? 'text-amber-700 bg-amber-50' : 'text-red-700 bg-red-50');
+        }
+      });
+    }
+
+    function computeAnalytics() {
+      const qCount = appState.questions.length;
+      const sCount = appState.students.length;
+      const maxTotal = Number(appState.questions.reduce((a, q) => a + q.max, 0).toFixed(2));
+
+      let maxBilish = 0, maxQollash = 0, maxMulohaza = 0;
+      appState.questions.forEach(q => {
+        if (q.level === 'B') maxBilish += q.max;
+        else if (q.level === 'M') maxMulohaza += q.max;
+        else maxQollash += q.max;
+      });
+      maxBilish = Number(maxBilish.toFixed(2));
+      maxQollash = Number(maxQollash.toFixed(2));
+      maxMulohaza = Number(maxMulohaza.toFixed(2));
+
+      const questionSums = new Array(qCount).fill(0);
+      let sumBilishAll = 0, sumQollashAll = 0, sumMulohazaAll = 0, sumTotalAll = 0;
+
+      const studentRows = appState.students.map((st, idx) => {
+        let sBilish = 0, sQollash = 0, sMulohaza = 0, sTotal = 0;
+        const weakQuestions = [];
+        appState.questions.forEach((q, qIdx) => {
+          const sc = Number(st.scores[qIdx]) || 0;
+          sTotal += sc;
+          questionSums[qIdx] += sc;
+          if (q.level === 'B') sBilish += sc;
+          else if (q.level === 'M') sMulohaza += sc;
+          else sQollash += sc;
+          const qPct = q.max > 0 ? (sc / q.max) * 100 : 0;
+          if (qPct < 50) weakQuestions.push(`${qIdx + 1}-savol`);
+        });
+        sBilish = Number(sBilish.toFixed(2));
+        sQollash = Number(sQollash.toFixed(2));
+        sMulohaza = Number(sMulohaza.toFixed(2));
+        sTotal = Number(sTotal.toFixed(2));
+
+        sumBilishAll += sBilish;
+        sumQollashAll += sQollash;
+        sumMulohazaAll += sMulohaza;
+        sumTotalAll += sTotal;
+
+        const pct = maxTotal > 0 ? Number(((sTotal / maxTotal) * 100).toFixed(1)) : 0;
+        const grade = calculateGradeValue(sTotal, maxTotal, appState.controlType);
+
+        return { index: idx + 1, name: normalizeUz(st.name), scores: st.scores, bilish: sBilish, qollash: sQollash, mulohaza: sMulohaza, total: sTotal, pct, grade, weakQuestions };
+      });
+
+      const questionAvgs = questionSums.map(sum => sCount > 0 ? Number((sum / sCount).toFixed(2)) : 0);
+      const questionPcts = questionSums.map((sum, idx) => {
+        const maxPossibleAll = appState.questions[idx].max * sCount;
+        return maxPossibleAll > 0 ? Math.round((sum / maxPossibleAll) * 100) : 0;
+      });
+
+      const avgBilish = sCount > 0 ? Number((sumBilishAll / sCount).toFixed(2)) : 0;
+      const avgQollash = sCount > 0 ? Number((sumQollashAll / sCount).toFixed(2)) : 0;
+      const avgMulohaza = sCount > 0 ? Number((sumMulohazaAll / sCount).toFixed(2)) : 0;
+      const avgTotal = sCount > 0 ? Number((sumTotalAll / sCount).toFixed(2)) : 0;
+
+      const pctBilish = (maxBilish * sCount) > 0 ? Math.round((sumBilishAll / (maxBilish * sCount)) * 100) : 0;
+      const pctQollash = (maxQollash * sCount) > 0 ? Math.round((sumQollashAll / (maxQollash * sCount)) * 100) : 0;
+      const pctMulohaza = (maxMulohaza * sCount) > 0 ? Math.round((sumMulohazaAll / (maxMulohaza * sCount)) * 100) : 0;
+      const pctTotal = (maxTotal * sCount) > 0 ? Number(((sumTotalAll / (maxTotal * sCount)) * 100).toFixed(2)) : 0;
+
+      const grade5 = studentRows.filter(r => r.grade === 5).sort((a, b) => b.total - a.total);
+      const grade4 = studentRows.filter(r => r.grade === 4).sort((a, b) => b.total - a.total);
+      const grade3 = studentRows.filter(r => r.grade === 3).sort((a, b) => b.total - a.total);
+      const grade2 = studentRows.filter(r => r.grade === 2).sort((a, b) => b.total - a.total);
+
+      const qualityPct = sCount > 0 ? Math.round(((grade5.length + grade4.length) / sCount) * 100) : 0;
+      const masteryPct = sCount > 0 ? Math.round(((grade5.length + grade4.length + grade3.length) / sCount) * 100) : 0;
+      const gpa = sCount > 0 ? Number(((grade5.length * 5 + grade4.length * 4 + grade3.length * 3 + grade2.length * 2) / sCount).toFixed(1)) : 0;
+
+      return {
+        qCount, sCount, maxTotal, maxBilish, maxQollash, maxMulohaza,
+        questionSums, questionAvgs, questionPcts,
+        sumBilishAll: Number(sumBilishAll.toFixed(2)),
+        sumQollashAll: Number(sumQollashAll.toFixed(2)),
+        sumMulohazaAll: Number(sumMulohazaAll.toFixed(2)),
+        sumTotalAll: Number(sumTotalAll.toFixed(2)),
+        avgBilish, avgQollash, avgMulohaza, avgTotal,
+        pctBilish, pctQollash, pctMulohaza, pctTotal,
+        studentRows, grade5, grade4, grade3, grade2,
+        qualityPct, masteryPct, gpa
+      };
+    }
+
+    function updateReportDateFromToolbar(newDate) {
+      if (!newDate) return;
+      appState.date = newDate;
+      document.getElementById('inputDate').value = newDate;
+      const grpText = appState.group ? ` (${appState.group})` : '';
+      document.getElementById('repMetaLine').textContent = normalizeUz(`${appState.subject} — ${appState.controlType} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • Sana: ${appState.date}`);
+    }
+
+    function generateOfficialReport() {
+      const data = computeAnalytics();
+      const grpText = appState.group ? ` (${appState.group})` : '';
+      document.getElementById('repSchoolName').textContent = normalizeUz(appState.school);
+      document.getElementById('repMetaLine').textContent = normalizeUz(`${appState.subject} — ${appState.controlType} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • Sana: ${appState.date}`);
+      document.getElementById('repAnalysisSub').textContent = normalizeUz(`${appState.subject} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • ${appState.controlType}`);
+
+      const toolbarDate = document.getElementById('reportDateInput');
+      if (toolbarDate) toolbarDate.value = appState.date;
+
+      document.getElementById('repDeputyName').textContent = normalizeUz(appState.deputy);
+      document.getElementById('repMethodHeadName').textContent = normalizeUz(appState.methodHead);
+      document.getElementById('repTeacherName').textContent = normalizeUz(appState.teacher);
+
+      const qCount = appState.questions.length;
+      const fixedColsWidth = 22 + 115 + 32 + 34 + 42 + 32 + 28;
+      const availQWidth = 718 - fixedColsWidth;
+      const qColW = Math.max(20, Math.floor(availQWidth / Math.max(1, qCount)));
+
+      let colgroup = `<colgroup><col style="width:22px;"><col style="width:115px;">`;
+      for (let i = 0; i < qCount; i++) colgroup += `<col style="width:${qColW}px;">`;
+      colgroup += `<col style="width:32px;"><col style="width:34px;"><col style="width:42px;"><col style="width:32px;"><col style="width:28px;"></colgroup>`;
+
+      let tbl = `<table class="report-table">${colgroup}<thead><tr><th class="bg-navy" style="width:22px;">№</th><th class="bg-navy text-left pl-1.5" style="width:115px;">Öquvçining F.I.Ş</th>`;
+      appState.questions.forEach((q, i) => { tbl += `<th class="bg-navy">${i + 1}</th>`; });
+      tbl += `<th class="bg-navy">Biliş</th><th class="bg-navy">Qöllaş</th><th class="bg-navy">Mulohaza</th><th class="bg-navy">Jami</th><th class="bg-navy">%</th></tr><tr><td class="bg-sub" colspan="2">Ball</td>`;
+      appState.questions.forEach(q => { tbl += `<td class="bg-sub">${formatNum(q.max)}</td>`; });
+      tbl += `<td class="bg-bilish font-bold">${formatNum(data.maxBilish)}</td><td class="bg-qollash font-bold">${formatNum(data.maxQollash)}</td><td class="bg-mulohaza font-bold">${formatNum(data.maxMulohaza)}</td><td class="bg-sub">${formatNum(data.maxTotal)}</td><td class="bg-sub">100</td></tr></thead><tbody>`;
+
+      data.studentRows.forEach(r => {
+        tbl += `<tr><td class="font-medium">${r.index}</td><td class="text-left pl-1.5 font-medium truncate">${escapeHtml(r.name)}</td>`;
+        r.scores.forEach(sc => {
+          const val = Number(sc) || 0;
+          tbl += `<td class="text-slate-900 font-medium">${formatNum(val)}</td>`;
+        });
+        tbl += `<td class="bg-bilish font-semibold">${formatNum(r.bilish)}</td><td class="bg-qollash font-semibold">${formatNum(r.qollash)}</td><td class="bg-mulohaza font-semibold">${formatNum(r.mulohaza)}</td><td class="font-bold">${formatNum(r.total)}</td><td class="font-bold">${formatNum(r.pct)}</td></tr>`;
+      });
+
+      tbl += `<tr class="summary-row"><td colspan="2" class="text-left pl-1.5">Jami ball</td>`;
+      data.questionSums.forEach(s => { tbl += `<td>${formatNum(Number(s.toFixed(2)))}</td>`; });
+      tbl += `<td class="bg-bilish">${formatNum(data.sumBilishAll)}</td><td class="bg-qollash">${formatNum(data.sumQollashAll)}</td><td class="bg-mulohaza">${formatNum(data.sumMulohazaAll)}</td><td>${formatNum(data.sumTotalAll)}</td><td>${formatNum(data.pctTotal)}</td></tr>`;
+
+      tbl += `<tr class="summary-row"><td colspan="2" class="text-left pl-1.5">Örtaça</td>`;
+      data.questionAvgs.forEach(a => { tbl += `<td>${formatNum(a)}</td>`; });
+      tbl += `<td class="bg-bilish">${formatNum(data.avgBilish)}</td><td class="bg-qollash">${formatNum(data.avgQollash)}</td><td class="bg-mulohaza">${formatNum(data.avgMulohaza)}</td><td>${formatNum(data.avgTotal)}</td><td>${formatNum(data.pctTotal)}</td></tr>`;
+
+      tbl += `<tr class="summary-row"><td colspan="2" class="text-left pl-1.5">Foiz (%)</td>`;
+      data.questionPcts.forEach(p => { tbl += `<td>${p}</td>`; });
+      tbl += `<td class="bg-bilish">${data.pctBilish}</td><td class="bg-qollash">${data.pctQollash}</td><td class="bg-mulohaza">${data.pctMulohaza}</td><td>${formatNum(data.pctTotal)}</td><td>${formatNum(data.pctTotal)}</td></tr></tbody></table>`;
+
+      document.getElementById('repMainTableWrapper').innerHTML = tbl;
+
+      document.getElementById('kpiQuality').textContent = data.qualityPct + '%';
+      document.getElementById('kpiMastery').textContent = data.masteryPct + '%';
+      document.getElementById('kpiGPA').textContent = data.gpa.toFixed(1);
+      document.getElementById('kpiHighLow').textContent = `${data.grade5.length} / ${data.grade2.length}`;
+      document.getElementById('donutCenterText').textContent = data.gpa.toFixed(1);
+
+      const sTotal = Math.max(data.sCount, 1);
+      const p5 = Math.round((data.grade5.length / sTotal) * 100);
+      const p4 = Math.round((data.grade4.length / sTotal) * 100);
+      const p3 = Math.round((data.grade3.length / sTotal) * 100);
+      const p2 = Math.round((data.grade2.length / sTotal) * 100);
+
+      document.getElementById('donutLegend').innerHTML = `
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-xs bg-[#2e9e5b] inline-block"></span><div><div class="font-bold text-slate-800">5 baho</div><div class="text-[8px] text-slate-500">${data.grade5.length} nafar · ${p5}%</div></div></div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-xs bg-[#2c6ecb] inline-block"></span><div><div class="font-bold text-slate-800">4 baho</div><div class="text-[8px] text-slate-500">${data.grade4.length} nafar · ${p4}%</div></div></div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-xs bg-[#e5a93c] inline-block"></span><div><div class="font-bold text-slate-800">3 baho</div><div class="text-[8px] text-slate-500">${data.grade3.length} nafar · ${p3}%</div></div></div>
+        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-xs bg-[#d94343] inline-block"></span><div><div class="font-bold text-slate-800">2 baho</div><div class="text-[8px] text-slate-500">${data.grade2.length} nafar · ${p2}%</div></div></div>
+      `;
+
+      document.getElementById('titleGrade5').textContent = `A'loçilar (5 baho) — ${data.grade5.length} nafar`;
+      document.getElementById('tableGrade5Wrapper').innerHTML = buildCategoryTable(data.grade5, 'bg-[#2e9e5b]', false, "5 baho olgan öquvçi yöq.");
+      document.getElementById('titleGrade4').textContent = `Yaxşi özlaştiruvçilar (4 baho) — ${data.grade4.length} nafar`;
+      document.getElementById('tableGrade4Wrapper').innerHTML = buildCategoryTable(data.grade4, 'bg-[#24589c]', false, "4 baho olgan öquvçi yöq.");
+      document.getElementById('titleGrade3').textContent = `Qoniqarli özlaştiruvçilar (3 baho) — ${data.grade3.length} nafar`;
+      document.getElementById('tableGrade3Wrapper').innerHTML = buildCategoryTable(data.grade3, 'bg-[#d99b26]', true, "3 baho olgan öquvçi yöq.");
+      document.getElementById('titleGrade2').textContent = `Past özlaştiruvçilar (2 baho) — ${data.grade2.length} nafar`;
+      document.getElementById('tableGrade2Wrapper').innerHTML = buildCategoryTable(data.grade2, 'bg-[#c93b3b]', true, "2 baho olgan öquvçi yöq — natija yaxşi.");
+
+      const lowQs = [], highQs = [];
+      data.questionPcts.forEach((pct, idx) => {
+        if (pct <= 60) lowQs.push(`${idx + 1}-savol (${pct}%)`);
+        if (pct >= 90) highQs.push(`${idx + 1}-savol (${pct}%)`);
+      });
+      const perfDesc = data.qualityPct >= 70 ? "sinf natijasi yuqori darajada" : (data.qualityPct >= 50 ? "sinf natijasi örtaça barqaror darajada" : "sinfda qöşimça maşğulotlar talab etiladi");
+      document.getElementById('methodConclusionText').textContent = normalizeUz(
+        `Sinfda ${data.sCount} nafar öquvçi iştirak etdi. Özlaştirish körsatkiçi ${data.masteryPct}%, sifat körsatkiçi (4 va 5 baho) ${data.qualityPct}%, örtaça baho ${data.gpa.toFixed(1)} — ${perfDesc}. ` +
+        `${data.grade5.length} nafar öquvçi a'lo (5), ${data.grade4.length} nafari yaxşi (4), ${data.grade3.length} nafari qoniqarli (3), ${data.grade2.length} nafari qoniqarsiz (2) baho oldi. ` +
+        (lowQs.length > 0 ? `Eng past özlaştirilgan savollar: ${lowQs.join(', ')} — bu mavzularda bilim böşliği aniq körinmoqda. ` : `Barça savollar böyiça özlaştirish 60% dan yuqori. `) +
+        (highQs.length > 0 ? `Yaxşi özlaştirilgan savollar: ${highQs.join(', ')}.` : ``)
+      );
+      document.getElementById('methodRecommendationsText').textContent = normalizeUz(
+        lowQs.length > 0
+          ? `${lowQs.map(q => q.split(' ')[0]).join(', ')} mavzularini qayta tuşuntiriş va qoniqarli/past özlaştiruvçi öquvçilar bilan individual takrorlaş maşğulotlarini taşkil etiş tavsiya etiladi.`
+          : `Öquvçilarning erişgan natijalarini mustahkamlash uçun murakkabroq amaliy va mulohazaga oid topşiriqlar bilan işlaşni davom ettiriş tavsiya etiladi.`
+      );
+
+      switchView('report');
+      renderCharts(data);
+    }
+
+    function buildCategoryTable(rows, headerColorClass, includeWeakCol, emptyMsg) {
+      if (!rows || rows.length === 0) return `<p class="text-[9px] text-slate-500 italic pl-2">${emptyMsg}</p>`;
+      let h = `<table class="report-table"><thead><tr><th class="${headerColorClass} text-white w-7">№</th><th class="${headerColorClass} text-white text-left pl-2 ${includeWeakCol ? 'w-[34%]' : 'w-[68%]'}">F.I.Ş</th><th class="${headerColorClass} text-white w-12">Ball</th><th class="${headerColorClass} text-white w-12">Foiz</th>${includeWeakCol ? `<th class="${headerColorClass} text-white text-left pl-2">Qiynalgan savollar (50% dan past)</th>` : `<th class="${headerColorClass} text-white w-12">Baho</th>`}</tr></thead><tbody>`;
+      rows.forEach((r, idx) => {
+        h += `<tr><td>${idx + 1}</td><td class="text-left pl-2 font-medium">${escapeHtml(r.name)}</td><td class="font-semibold">${formatNum(r.total)}</td><td class="font-bold">${Math.round(r.pct)}%</td>${includeWeakCol ? `<td class="text-left pl-2 text-slate-700">${r.weakQuestions.length > 0 ? r.weakQuestions.join(', ') : '—'}</td>` : `<td class="font-bold">${r.grade}</td>`}</tr>`;
+      });
+      h += `</tbody></table>`;
+      return h;
+    }
+
+    function renderCharts(data) {
+      if (typeof Chart === 'undefined') return;
+      const ctxDonut = document.getElementById('gradeDonutChart').getContext('2d');
+      if (donutChartInstance) donutChartInstance.destroy();
+      donutChartInstance = new Chart(ctxDonut, {
+        type: 'doughnut',
+        data: {
+          labels: ['5 baho', '4 baho', '3 baho', '2 baho'],
+          datasets: [{ data: [data.grade5.length, data.grade4.length, data.grade3.length, data.grade2.length], backgroundColor: ['#2e9e5b', '#2c6ecb', '#e5a93c', '#d94343'], borderWidth: 1.5, borderColor: '#ffffff' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '64%', animation: false, plugins: { legend: { display: false }, tooltip: { enabled: true } } }
+      });
+
+      const ctxBar = document.getElementById('questionBarChart').getContext('2d');
+      if (barChartInstance) barChartInstance.destroy();
+      const labels = data.questionPcts.map((_, i) => `${i + 1}-savol`);
+      const bgColors = data.questionPcts.map(p => p >= 80 ? '#2e9e5b' : (p >= 60 ? '#d9a420' : '#d96b27'));
+      const barValueLabelsPlugin = {
+        id: 'barValueLabels',
+        afterDatasetsDraw(chart) {
+          const { ctx } = chart;
+          ctx.save();
+          ctx.font = 'bold 8px Inter, sans-serif';
+          ctx.fillStyle = '#1e293b';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          const meta = chart.getDatasetMeta(0);
+          meta.data.forEach((bar, index) => {
+            const val = chart.data.datasets[0].data[index];
+            ctx.fillText(val + '%', bar.x + 4, bar.y);
+          });
+          ctx.restore();
+        }
+      };
+      barChartInstance = new Chart(ctxBar, {
+        type: 'bar',
+        data: { labels, datasets: [{ data: data.questionPcts, backgroundColor: bgColors, barPercentage: 0.72, categoryPercentage: 0.85 }] },
+        options: {
+          indexAxis: 'y', responsive: true, maintainAspectRatio: false, animation: false,
+          layout: { padding: { right: 28 } },
+          scales: {
+            x: { min: 0, max: 100, ticks: { stepSize: 25, font: { size: 7.5 } }, grid: { color: '#e2e8f0' } },
+            y: { ticks: { font: { size: 7.5 }, color: '#334155' }, grid: { display: false } }
+          },
+          plugins: { legend: { display: false } }
+        },
+        plugins: [barValueLabelsPlugin]
+      });
+    }
+
+    function printReportOnly() { window.print(); }
+
+    function downloadReportPDF() {
+      if (typeof html2pdf === 'undefined') {
+        alert("PDF saqlash oynasi ochiladi: 'Printer / Принтер' ro'yxatidan 'Microsoft Print to PDF' yoki 'Save as PDF' ni tanlab 'Save' tugmasini bosing.");
+        window.print();
+        return;
+      }
+      const btn = document.getElementById('btnDownloadPdf');
+      const originalText = btn ? btn.innerHTML : '';
+      if (btn) { btn.innerHTML = '⏳ PDF tayyorlanmoqda...'; btn.disabled = true; }
+
+      const sourceContainer = document.getElementById('reportPagesContainer');
+      const clone = sourceContainer.cloneNode(true);
+      clone.className = 'pdf-clone-root';
+
+      // Convert Chart.js canvases into static PNG images so they render crisply in cloned PDF DOM
+      const origCanvases = sourceContainer.querySelectorAll('canvas');
+      const cloneCanvases = clone.querySelectorAll('canvas');
+      origCanvases.forEach((origC, idx) => {
+        if (cloneCanvases[idx]) {
+          const img = document.createElement('img');
+          img.src = origC.toDataURL('image/png', 1.0);
+          img.style.width = origC.offsetWidth + 'px';
+          img.style.height = origC.offsetHeight + 'px';
+          cloneCanvases[idx].parentNode.replaceChild(img, cloneCanvases[idx]);
+        }
+      });
+
+      const wrapper = document.createElement('div');
+      wrapper.style.position = 'fixed';
+      wrapper.style.left = '0';
+      wrapper.style.top = '0';
+      wrapper.style.width = '794px';
+      wrapper.style.zIndex = '-9999';
+      wrapper.style.background = '#ffffff';
+      wrapper.appendChild(clone);
+      document.body.appendChild(wrapper);
+
+      const grpPart = appState.group ? `_${appState.group}` : '';
+      const filename = normalizeUz(`${appState.grade}-${appState.section}${grpPart}_${appState.subject}_${appState.controlType}_Hisobot.pdf`).replace(/\s+/g, '_');
+
+      const opt = {
+        margin: [6, 0, 6, 0],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0, x: 0, y: 0, windowWidth: 794 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'avoid-all', 'legacy'] }
+      };
+
+      html2pdf().set(opt).from(clone).save().then(() => {
+        document.body.removeChild(wrapper);
+        if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+      }).catch(() => {
+        if (wrapper.parentNode) document.body.removeChild(wrapper);
+        if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+        window.print();
+      });
+    }
+
+    function exportReportExcel() {
+      const data = computeAnalytics();
+      const qCount = appState.questions.length;
+      const totalCols = qCount + 7;
+      const grpText = appState.group ? ` (${appState.group})` : '';
+      let html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,Arial,sans-serif;font-size:10pt;}table{border-collapse:collapse;}th,td{border:1px solid #334155;padding:4px 6px;text-align:center;vertical-align:middle;}.title{font-size:15pt;font-weight:bold;border:none;text-align:center;color:#0f172a;}.subtitle{font-size:10pt;border:none;text-align:center;color:#334155;}.navy-hdr{background-color:#183661;color:#ffffff;font-weight:bold;}.sub-hdr{background-color:#e2e8f0;font-weight:bold;color:#0f172a;}.bilish{background-color:#e0f2fe;font-weight:bold;}.qollash{background-color:#fef3c7;font-weight:bold;}.mulohaza{background-color:#fce7f3;font-weight:bold;}.sum-row{background-color:#f1f5f9;font-weight:bold;}.left{text-align:left;}.sec-title{font-size:11pt;font-weight:bold;border:none;text-align:left;color:#183661;padding-top:10px;}.cat-5{background-color:#2e9e5b;color:#ffffff;font-weight:bold;}.cat-4{background-color:#24589c;color:#ffffff;font-weight:bold;}.cat-3{background-color:#d99b26;color:#ffffff;font-weight:bold;}.cat-2{background-color:#c93b3b;color:#ffffff;font-weight:bold;}.no-border{border:none;text-align:left;}</style></head><body><table><tr><td colspan="${totalCols}" class="title">${escapeHtml(normalizeUz(appState.school))}</td></tr><tr><td colspan="${totalCols}" class="subtitle">${escapeHtml(normalizeUz(`${appState.subject} — ${appState.controlType} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • Sana: ${appState.date}`))}</td></tr><tr><td colspan="${totalCols}" class="no-border"></td></tr><tr><th class="navy-hdr">№</th><th class="navy-hdr left">Öquvçining F.I.Ş</th>`;
+      appState.questions.forEach((_, i) => { html += `<th class="navy-hdr">${i + 1}</th>`; });
+      html += `<th class="navy-hdr">Biliş</th><th class="navy-hdr">Qöllaş</th><th class="navy-hdr">Mulohaza</th><th class="navy-hdr">Jami</th><th class="navy-hdr">%</th></tr><tr><td colspan="2" class="sub-hdr">Ball</td>`;
+      appState.questions.forEach(q => { html += `<td class="sub-hdr">${formatNum(q.max)}</td>`; });
+      html += `<td class="bilish">${formatNum(data.maxBilish)}</td><td class="qollash">${formatNum(data.maxQollash)}</td><td class="mulohaza">${formatNum(data.maxMulohaza)}</td><td class="sub-hdr">${formatNum(data.maxTotal)}</td><td class="sub-hdr">100</td></tr>`;
+      data.studentRows.forEach(r => {
+        html += `<tr><td>${r.index}</td><td class="left">${escapeHtml(r.name)}</td>`;
+        r.scores.forEach(sc => { html += `<td>${formatNum(Number(sc) || 0)}</td>`; });
+        html += `<td class="bilish">${formatNum(r.bilish)}</td><td class="qollash">${formatNum(r.qollash)}</td><td class="mulohaza">${formatNum(r.mulohaza)}</td><td><b>${formatNum(r.total)}</b></td><td><b>${formatNum(r.pct)}</b></td></tr>`;
+      });
+      html += `<tr class="sum-row"><td colspan="2" class="left">Jami ball</td>`;
+      data.questionSums.forEach(s => { html += `<td>${formatNum(Number(s.toFixed(2)))}</td>`; });
+      html += `<td class="bilish">${formatNum(data.sumBilishAll)}</td><td class="qollash">${formatNum(data.sumQollashAll)}</td><td class="mulohaza">${formatNum(data.sumMulohazaAll)}</td><td>${formatNum(data.sumTotalAll)}</td><td>${formatNum(data.pctTotal)}</td></tr><tr class="sum-row"><td colspan="2" class="left">Örtaça</td>`;
+      data.questionAvgs.forEach(a => { html += `<td>${formatNum(a)}</td>`; });
+      html += `<td class="bilish">${formatNum(data.avgBilish)}</td><td class="qollash">${formatNum(data.avgQollash)}</td><td class="mulohaza">${formatNum(data.avgMulohaza)}</td><td>${formatNum(data.avgTotal)}</td><td>${formatNum(data.pctTotal)}</td></tr><tr class="sum-row"><td colspan="2" class="left">Foiz (%)</td>`;
+      data.questionPcts.forEach(p => { html += `<td>${p}</td>`; });
+      html += `<td class="bilish">${data.pctBilish}</td><td class="qollash">${data.pctQollash}</td><td class="mulohaza">${data.pctMulohaza}</td><td>${formatNum(data.pctTotal)}</td><td>${formatNum(data.pctTotal)}</td></tr><tr><td colspan="${totalCols}" class="no-border"></td></tr><tr><td colspan="${totalCols}" class="no-border"><b>ÖIBDÖ:</b> ________________________ <b>${escapeHtml(normalizeUz(appState.deputy))}</b></td></tr><tr><td colspan="${totalCols}" class="no-border"><b>Metodbirlaşma rahbari:</b> ________________________ <b>${escapeHtml(normalizeUz(appState.methodHead))}</b></td></tr><tr><td colspan="${totalCols}" class="no-border"><b>Fan öqituvçisi:</b> ________________________ <b>${escapeHtml(normalizeUz(appState.teacher))}</b></td></tr><tr><td colspan="${totalCols}" class="no-border"></td></tr><tr><td colspan="${totalCols}" class="sec-title">NATIJALAR TAHLILI (${escapeHtml(normalizeUz(`${appState.subject} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • ${appState.controlType}`))})</td></tr><tr><td colspan="2" style="background:#ecfdf5;font-weight:bold;color:#047857;">Sifat körsatkiçi: ${data.qualityPct}%</td><td colspan="3" style="background:#f0fdfa;font-weight:bold;color:#0f766e;">Özlaştirish: ${data.masteryPct}%</td><td colspan="3" style="background:#eff6ff;font-weight:bold;color:#1d4ed8;">Örtaça baho: ${data.gpa.toFixed(1)}</td><td colspan="${Math.max(1, totalCols - 8)}" style="background:#fffbeb;font-weight:bold;">A'loçilar / past: ${data.grade5.length} / ${data.grade2.length}</td></tr>`;
+      const addExcelCat = (title, rows, hdrClass, withWeak) => {
+        html += `<tr><td colspan="${totalCols}" class="sec-title">${title} (${rows.length} nafar)</td></tr>`;
+        if (rows.length === 0) { html += `<tr><td colspan="${totalCols}" class="left">Uşbu toifada öquvçi yöq.</td></tr>`; return; }
+        html += `<tr><th class="${hdrClass}">№</th><th colspan="3" class="${hdrClass} left">F.I.Ş</th><th class="${hdrClass}">Ball</th><th class="${hdrClass}">Foiz</th><th colspan="${Math.max(1, totalCols - 6)}" class="${hdrClass} left">${withWeak ? 'Qiynalgan savollar (50% dan past)' : 'Baho'}</th></tr>`;
+        rows.forEach((r, idx) => {
+          html += `<tr><td>${idx + 1}</td><td colspan="3" class="left">${escapeHtml(r.name)}</td><td>${formatNum(r.total)}</td><td>${Math.round(r.pct)}%</td><td colspan="${Math.max(1, totalCols - 6)}" class="left">${withWeak ? (r.weakQuestions.length > 0 ? r.weakQuestions.join(', ') : '—') : r.grade}</td></tr>`;
+        });
+      };
+      addExcelCat("A'loçilar (5 baho)", data.grade5, 'cat-5', false);
+      addExcelCat("Yaxşi özlaştiruvçilar (4 baho)", data.grade4, 'cat-4', false);
+      addExcelCat("Qoniqarli özlaştiruvçilar (3 baho)", data.grade3, 'cat-3', true);
+      addExcelCat("Past özlaştiruvçilar (2 baho)", data.grade2, 'cat-2', true);
+      html += `<tr><td colspan="${totalCols}" class="sec-title">Metodik xulosa</td></tr><tr><td colspan="${totalCols}" class="left" style="background:#f8fafc;">${escapeHtml(document.getElementById('methodConclusionText').textContent)}</td></tr><tr><td colspan="${totalCols}" class="sec-title">Tavsiyalar</td></tr><tr><td colspan="${totalCols}" class="left">${escapeHtml(document.getElementById('methodRecommendationsText').textContent)}</td></tr></table></body></html>`;
+      const blob = new Blob(['﻿', html], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const grpFile = appState.group ? `_${appState.group}` : '';
+      a.download = normalizeUz(`${appState.grade}-${appState.section}${grpFile}_${appState.subject}_${appState.controlType}_Hisobot.xls`).replace(/\s+/g, '_');
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function saveToArchive() {
+      const archive = JSON.parse(localStorage.getItem(STORAGE_KEYS.ARCHIVE) || '[]');
+      const data = computeAnalytics();
+      if (appState.editingArchiveId) {
+        const idx = archive.findIndex(item => item.id === appState.editingArchiveId);
+        if (idx !== -1) {
+          archive[idx] = { id: appState.editingArchiveId, savedAt: new Date().toLocaleString('uz-UZ'), state: JSON.parse(JSON.stringify(appState)), summary: { qualityPct: data.qualityPct, masteryPct: data.masteryPct, gpa: data.gpa, studentCount: data.sCount } };
+          localStorage.setItem(STORAGE_KEYS.ARCHIVE, JSON.stringify(archive));
+          alert("Arxivdagi hisobot muvaffaqiyatli yangilandi!");
+          return;
+        }
+      }
+      const newId = Date.now();
+      appState.editingArchiveId = newId;
+      archive.unshift({ id: newId, savedAt: new Date().toLocaleString('uz-UZ'), state: JSON.parse(JSON.stringify(appState)), summary: { qualityPct: data.qualityPct, masteryPct: data.masteryPct, gpa: data.gpa, studentCount: data.sCount } });
+      localStorage.setItem(STORAGE_KEYS.ARCHIVE, JSON.stringify(archive));
+      alert("Hisobot arxivga muvaffaqiyatli saqlandi!");
+    }
+
+    function renderArchiveView() {
+      const archive = JSON.parse(localStorage.getItem(STORAGE_KEYS.ARCHIVE) || '[]');
+      const container = document.getElementById('archiveListContainer');
+      if (archive.length === 0) {
+        container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500 border border-dashed rounded">Hozirça arxivda saqlangan hisobotlar yöq.</div>`;
+        return;
+      }
+      container.innerHTML = archive.map(item => {
+        const grpLabel = item.state.group ? ` (${item.state.group})` : '';
+        return `
+        <div class="border border-slate-300 rounded p-3 flex flex-wrap items-center justify-between gap-3 hover:bg-slate-50">
+          <div>
+            <div class="font-bold text-sm text-slate-900">${escapeHtml(normalizeUz(item.state.grade + '-' + item.state.section + grpLabel))} — ${escapeHtml(normalizeUz(item.state.subject))} (${escapeHtml(normalizeUz(item.state.controlType))})</div>
+            <div class="text-xs text-slate-600">${escapeHtml(normalizeUz(item.state.school))} • ${escapeHtml(normalizeUz(item.state.quarter))} • Sana: ${item.state.date}</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Sifat: <strong>${item.summary.qualityPct}%</strong> | Özlaştirish: <strong>${item.summary.masteryPct}%</strong> | Örtaça baho: <strong>${item.summary.gpa}</strong></div>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button onclick="loadFromArchive(${item.id})" class="bg-blue-700 hover:bg-blue-800 text-white px-3 py-1.5 rounded text-xs font-semibold cursor-pointer">👁️ Hisobotni köriş</button>
+            <button onclick="editFromArchive(${item.id})" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded text-xs font-semibold cursor-pointer">✏️ Tahrirlaş</button>
+            <button onclick="pdfFromArchive(${item.id})" class="bg-red-700 hover:bg-red-800 text-white px-3 py-1.5 rounded text-xs font-semibold cursor-pointer">📄 PDF qiliş</button>
+            <button onclick="deleteFromArchive(${item.id})" class="bg-slate-200 hover:bg-red-100 text-red-700 px-2.5 py-1.5 rounded text-xs font-semibold cursor-pointer">Öçiriş</button>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function applyArchiveStateToApp(item, keepEditingId) {
+      Object.assign(appState, JSON.parse(JSON.stringify(item.state)));
+      appState.editingArchiveId = keepEditingId ? item.id : null;
+      document.getElementById('inputSchool').value = normalizeUz(appState.school);
+      document.getElementById('inputDeputy').value = normalizeUz(appState.deputy || DEFAULT_DEPUTY_NAME);
+      document.getElementById('inputTeacher').value = normalizeUz(appState.teacher);
+      document.getElementById('inputMethodHead').value = normalizeUz(appState.methodHead || "");
+      document.getElementById('selectSubject').value = normalizeUz(appState.subject);
+      document.getElementById('selectControlType').value = normalizeUz(appState.controlType);
+      document.getElementById('selectGrade').value = appState.grade;
+      document.getElementById('selectSection').value = appState.section;
+      updateGroupVisibility();
+      if (appState.group) selectGroupOption(appState.group);
+      document.getElementById('selectQuarter').value = normalizeUz(appState.quarter);
+      document.getElementById('inputDate').value = appState.date;
+      document.getElementById('inputStudentCount').value = appState.students.length;
+      document.getElementById('inputQuestionCount').value = appState.questions.length;
+      onControlTypeChange();
+    }
+
+    function loadFromArchive(id) {
+      const archive = JSON.parse(localStorage.getItem(STORAGE_KEYS.ARCHIVE) || '[]');
+      const item = archive.find(a => a.id === id);
+      if (!item) return;
+      applyArchiveStateToApp(item, true);
+      generateOfficialReport();
+    }
+
+    function editFromArchive(id) {
+      const archive = JSON.parse(localStorage.getItem(STORAGE_KEYS.ARCHIVE) || '[]');
+      const item = archive.find(a => a.id === id);
+      if (!item) return;
+      applyArchiveStateToApp(item, true);
+      renderScoreEntryTable();
+      switchView('entry');
+    }
+
+    function pdfFromArchive(id) {
+      const archive = JSON.parse(localStorage.getItem(STORAGE_KEYS.ARCHIVE) || '[]');
+      const item = archive.find(a => a.id === id);
+      if (!item) return;
+      applyArchiveStateToApp(item, true);
+      generateOfficialReport();
+      setTimeout(() => { downloadReportPDF(); }, 450);
+    }
+
+    function deleteFromArchive(id) {
+      let archive = JSON.parse(localStorage.getItem(STORAGE_KEYS.ARCHIVE) || '[]');
+      archive = archive.filter(a => a.id !== id);
+      localStorage.setItem(STORAGE_KEYS.ARCHIVE, JSON.stringify(archive));
+      renderArchiveView();
+    }
+
+    let selectedDbClass = '5-A';
+
+    function onDbNewGradeChange() {
+      const g = document.getElementById('dbNewGrade').value;
+      const grpSel = document.getElementById('dbNewGroup');
+      if (g === '7') grpSel.classList.remove('hidden');
+      else { grpSel.classList.add('hidden'); grpSel.value = ''; }
+    }
+
+    function createNewClassInDb() {
+      const grade = document.getElementById('dbNewGrade').value;
+      const section = document.getElementById('dbNewSection').value;
+      const grp = (grade === '7') ? document.getElementById('dbNewGroup').value : '';
+      const key = grp ? `${grade}-${section} (${grp})` : `${grade}-${section}`;
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      if (!db[key]) {
+        db[key] = [];
+        localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(db));
+      }
+      selectedDbClass = key;
+      renderStudentsDbView();
+    }
+
+    function deleteSelectedClassFromDb() {
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      const keys = Object.keys(db);
+      if (keys.length <= 1) { alert("Kamida bitta sinf röyxati qolişi kerak."); return; }
+      if (confirm(`${selectedDbClass} sinfini bazadan öçirmoqçimisiz?`)) {
+        delete db[selectedDbClass];
+        localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(db));
+        selectedDbClass = Object.keys(db)[0];
+        renderStudentsDbView();
+      }
+    }
+
+    function renderStudentsDbView() {
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      const classes = Object.keys(db).sort((a, b) => {
+        const na = parseInt(a.split('-')[0], 10) || 0;
+        const nb = parseInt(b.split('-')[0], 10) || 0;
+        if (na !== nb) return na - nb;
+        return a.localeCompare(b);
+      });
+      if (!classes.includes(selectedDbClass) && classes.length > 0) selectedDbClass = classes[0];
+      document.getElementById('dbClassList').innerHTML = classes.map(cls => `
+        <button onclick="selectedDbClass='${cls}'; renderStudentsDbView()" class="w-full text-left px-3 py-1.5 rounded text-xs font-semibold flex justify-between items-center ${cls === selectedDbClass ? 'bg-purple-700 text-white' : 'bg-white hover:bg-purple-50 text-slate-800 border border-slate-200'}">
+          <span>${cls} sinf</span>
+          <span class="text-[10px] opacity-80">${db[cls].length} öquvçi</span>
+        </button>
+      `).join('');
+
+      const list = db[selectedDbClass] || [];
+      document.getElementById('dbSelectedClassTitle').textContent = `${selectedDbClass} sinf öquvçilari röyxati`;
+      document.getElementById('dbStudentCountBadge').textContent = `Jami: ${list.length} nafar öquvçi`;
+      if (list.length === 0) {
+        document.getElementById('dbStudentsEditor').innerHTML = `<div class="text-center py-6 text-xs text-slate-500 border border-dashed rounded">Uşbu sinfda hali öquvçi qöşilmagan. «+ Öquvçi qöşiş» tugmasini bosing.</div>`;
+        return;
+      }
+      document.getElementById('dbStudentsEditor').innerHTML = list.map((name, idx) => `
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-500 w-6 text-right font-medium">${idx + 1}.</span>
+          <input type="text" value="${escapeHtml(normalizeUz(name))}" onchange="updateDbStudentName(${idx}, this.value)" class="flex-1 border border-slate-300 rounded px-2.5 py-1 text-xs font-medium">
+          <button onclick="removeDbStudent(${idx})" class="text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs font-bold">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function transliterateDbStudents() {
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      if (!db[selectedDbClass]) return;
+      db[selectedDbClass] = db[selectedDbClass].map(n => normalizeUz(n));
+      localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(db));
+      renderStudentsDbView();
+    }
+
+    function updateDbStudentName(idx, val) {
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      db[selectedDbClass][idx] = normalizeUz(val);
+      localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(db));
+    }
+
+    function addStudentToDb() {
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      if (!db[selectedDbClass]) db[selectedDbClass] = [];
+      db[selectedDbClass].push(`Yangi öquvçi ${db[selectedDbClass].length + 1}`);
+      localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(db));
+      renderStudentsDbView();
+    }
+
+    function removeDbStudent(idx) {
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      db[selectedDbClass].splice(idx, 1);
+      localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(db));
+      renderStudentsDbView();
+    }
+
+    function saveDbChanges() {
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      if (db[selectedDbClass]) {
+        db[selectedDbClass] = db[selectedDbClass].map(n => normalizeUz(n)).filter(n => n.trim() !== "");
+      }
+      localStorage.setItem(STORAGE_KEYS.STUDENTS_DB, JSON.stringify(db));
+      renderStudentsDbView();
+      alert(`${selectedDbClass} sinf röyxati muvaffaqiyatli saqlandi!`);
+    }
+
+    function loadDbClassToEntry() {
+      const db = JSON.parse(localStorage.getItem(STORAGE_KEYS.STUDENTS_DB) || '{}');
+      const list = db[selectedDbClass] || [];
+      const basePart = selectedDbClass.split(' ')[0];
+      const [g, s] = basePart.split('-');
+      const grpMatch = selectedDbClass.match(/\(([^)]+)\)/);
+      document.getElementById('selectGrade').value = g || '5';
+      document.getElementById('selectSection').value = s || 'A';
+      if (grpMatch && g === '7') {
+        const sub = document.getElementById('selectSubject').value;
+        if (!['Ingliz tili', 'Rus tili', 'Informatika va AT'].includes(sub)) {
+          document.getElementById('selectSubject').value = 'Ingliz tili';
+        }
+        updateGroupVisibility();
+        selectGroupOption(grpMatch[1]);
+      } else {
+        updateGroupVisibility();
+      }
+      document.getElementById('inputStudentCount').value = list.length > 0 ? list.length : 10;
+      if (!document.getElementById('inputQuestionCount').value) document.getElementById('inputQuestionCount').value = 10;
+      goToEntryView();
+    }
+
+    function renderClassSummaryView() {
+      const archive = JSON.parse(localStorage.getItem(STORAGE_KEYS.ARCHIVE) || '[]');
+      const container = document.getElementById('classSummaryContainer');
+      if (archive.length === 0) {
+        container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500 border border-dashed rounded">Hozirça tahlil uçun arxivda ma'lumot mavjud emas.</div>`;
+        return;
+      }
+      let h = `<table class="min-w-full text-xs border-collapse border border-slate-300"><thead><tr class="bg-[#183661] text-white"><th class="border border-slate-400 px-3 py-2">№</th><th class="border border-slate-400 px-3 py-2 text-left">Sinf</th><th class="border border-slate-400 px-3 py-2 text-left">Fan</th><th class="border border-slate-400 px-3 py-2">Nazorat</th><th class="border border-slate-400 px-3 py-2">Çorak</th><th class="border border-slate-400 px-3 py-2">Sifat (%)</th><th class="border border-slate-400 px-3 py-2">Özlaştirish (%)</th><th class="border border-slate-400 px-3 py-2">Örtaça baho</th></tr></thead><tbody>`;
+      archive.forEach((item, idx) => {
+        const grpLabel = item.state.group ? ` (${item.state.group})` : '';
+        h += `<tr class="text-center hover:bg-slate-50"><td class="border border-slate-300 px-2 py-1.5">${idx + 1}</td><td class="border border-slate-300 px-2 py-1.5 text-left font-bold">${escapeHtml(normalizeUz(item.state.grade + '-' + item.state.section + grpLabel))}</td><td class="border border-slate-300 px-2 py-1.5 text-left">${escapeHtml(normalizeUz(item.state.subject))}</td><td class="border border-slate-300 px-2 py-1.5">${escapeHtml(normalizeUz(item.state.controlType))}</td><td class="border border-slate-300 px-2 py-1.5">${escapeHtml(normalizeUz(item.state.quarter))}</td><td class="border border-slate-300 px-2 py-1.5 font-bold text-emerald-700">${item.summary.qualityPct}%</td><td class="border border-slate-300 px-2 py-1.5 font-bold text-blue-700">${item.summary.masteryPct}%</td><td class="border border-slate-300 px-2 py-1.5 font-extrabold">${item.summary.gpa}</td></tr>`;
+      });
+      h += `</tbody></table>`;
+      container.innerHTML = h;
+    }
+
+    function formatNum(num) {
+      if (num === null || num === undefined || isNaN(num)) return '0';
+      return Number.isInteger(num) ? num.toString() : Number(num.toFixed(2)).toString();
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    initCleanData();
+  </script>
+</body>
+</html>
