@@ -6,6 +6,7 @@ let html = fs.readFileSync('src/app.html', 'utf8');
 const tail = /initCleanData\(\);(\s*<\/script>\s*<\/body>)/;
 if (!tail.test(html) || !html.includes('</head>')) throw new Error('app.html tuzilishi kutilganidan farq qiladi');
 const inject = '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>\n' +
+  '<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>\n' +
   '<script>window.BSB_CONFIG=' + JSON.stringify({ url, key }) + ';</script>\n<script src="cloud.js"></script>\n';
 html = html.replace('</head>', () => inject + '<link rel="icon" href="favicon.ico">\n</head>');
 html = html.replace(tail, (m, rest) =>
