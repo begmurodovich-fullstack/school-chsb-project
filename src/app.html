@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BSB / CHSB Baholaş Dasturi — V2.0</title>
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
   
   
   
@@ -946,7 +947,7 @@
             📄 PDF ga saqlaş
           </button>
           <button onclick="exportReportExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-1.5 rounded text-xs font-bold inline-flex items-center gap-1.5 shadow-sm transition cursor-pointer">
-            📊 Excel (.xls) ga xuddi şu dizaynda yuklaş
+            📊 Excel (.xlsx) ga xuddi şu dizaynda yuklaş
           </button>
         </div>
       </div>
@@ -2011,49 +2012,355 @@
       });
     }
 
-    function exportReportExcel() {
-      const data = computeAnalytics();
-      const qCount = appState.questions.length;
-      const totalCols = qCount + 7;
-      const grpText = appState.group ? ` (${appState.group})` : '';
-      let html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"><style>body{font-family:Calibri,Arial,sans-serif;font-size:10pt;}table{border-collapse:collapse;}th,td{border:1px solid #334155;padding:4px 6px;text-align:center;vertical-align:middle;}.title{font-size:15pt;font-weight:bold;border:none;text-align:center;color:#0f172a;}.subtitle{font-size:10pt;border:none;text-align:center;color:#334155;}.navy-hdr{background-color:#183661;color:#ffffff;font-weight:bold;}.sub-hdr{background-color:#e2e8f0;font-weight:bold;color:#0f172a;}.bilish{background-color:#e0f2fe;font-weight:bold;}.qollash{background-color:#fef3c7;font-weight:bold;}.mulohaza{background-color:#fce7f3;font-weight:bold;}.sum-row{background-color:#f1f5f9;font-weight:bold;}.left{text-align:left;}.sec-title{font-size:11pt;font-weight:bold;border:none;text-align:left;color:#183661;padding-top:10px;}.cat-5{background-color:#2e9e5b;color:#ffffff;font-weight:bold;}.cat-4{background-color:#24589c;color:#ffffff;font-weight:bold;}.cat-3{background-color:#d99b26;color:#ffffff;font-weight:bold;}.cat-2{background-color:#c93b3b;color:#ffffff;font-weight:bold;}.no-border{border:none;text-align:left;}</style></head><body><table><tr><td colspan="${totalCols}" class="title">${escapeHtml(normalizeUz(appState.school))}</td></tr><tr><td colspan="${totalCols}" class="subtitle">${escapeHtml(normalizeUz(`${appState.subject} — ${appState.controlType} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • Sana: ${appState.date}`))}</td></tr><tr><td colspan="${totalCols}" class="no-border"></td></tr><tr><th class="navy-hdr">№</th><th class="navy-hdr left">Öquvçining F.I.Ş</th>`;
-      appState.questions.forEach((_, i) => { html += `<th class="navy-hdr">${i + 1}</th>`; });
-      html += `<th class="navy-hdr">Biliş</th><th class="navy-hdr">Qöllaş</th><th class="navy-hdr">Mulohaza</th><th class="navy-hdr">Jami</th><th class="navy-hdr">%</th></tr><tr><td colspan="2" class="sub-hdr">Ball</td>`;
-      appState.questions.forEach(q => { html += `<td class="sub-hdr">${formatNum(q.max)}</td>`; });
-      html += `<td class="bilish">${formatNum(data.maxBilish)}</td><td class="qollash">${formatNum(data.maxQollash)}</td><td class="mulohaza">${formatNum(data.maxMulohaza)}</td><td class="sub-hdr">${formatNum(data.maxTotal)}</td><td class="sub-hdr">100</td></tr>`;
-      data.studentRows.forEach(r => {
-        html += `<tr><td>${r.index}</td><td class="left">${escapeHtml(r.name)}</td>`;
-        r.scores.forEach(sc => { html += `<td>${formatNum(Number(sc) || 0)}</td>`; });
-        html += `<td class="bilish">${formatNum(r.bilish)}</td><td class="qollash">${formatNum(r.qollash)}</td><td class="mulohaza">${formatNum(r.mulohaza)}</td><td><b>${formatNum(r.total)}</b></td><td><b>${formatNum(r.pct)}</b></td></tr>`;
-      });
-      html += `<tr class="sum-row"><td colspan="2" class="left">Jami ball</td>`;
-      data.questionSums.forEach(s => { html += `<td>${formatNum(Number(s.toFixed(2)))}</td>`; });
-      html += `<td class="bilish">${formatNum(data.sumBilishAll)}</td><td class="qollash">${formatNum(data.sumQollashAll)}</td><td class="mulohaza">${formatNum(data.sumMulohazaAll)}</td><td>${formatNum(data.sumTotalAll)}</td><td>${formatNum(data.pctTotal)}</td></tr><tr class="sum-row"><td colspan="2" class="left">Örtaça</td>`;
-      data.questionAvgs.forEach(a => { html += `<td>${formatNum(a)}</td>`; });
-      html += `<td class="bilish">${formatNum(data.avgBilish)}</td><td class="qollash">${formatNum(data.avgQollash)}</td><td class="mulohaza">${formatNum(data.avgMulohaza)}</td><td>${formatNum(data.avgTotal)}</td><td>${formatNum(data.pctTotal)}</td></tr><tr class="sum-row"><td colspan="2" class="left">Foiz (%)</td>`;
-      data.questionPcts.forEach(p => { html += `<td>${p}</td>`; });
-      html += `<td class="bilish">${data.pctBilish}</td><td class="qollash">${data.pctQollash}</td><td class="mulohaza">${data.pctMulohaza}</td><td>${formatNum(data.pctTotal)}</td><td>${formatNum(data.pctTotal)}</td></tr><tr><td colspan="${totalCols}" class="no-border"></td></tr><tr><td colspan="${totalCols}" class="no-border"><b>ÖIBDÖ:</b> ________________________ <b>${escapeHtml(normalizeUz(appState.deputy))}</b></td></tr><tr><td colspan="${totalCols}" class="no-border"><b>Metodbirlaşma rahbari:</b> ________________________ <b>${escapeHtml(normalizeUz(appState.methodHead))}</b></td></tr><tr><td colspan="${totalCols}" class="no-border"><b>Fan öqituvçisi:</b> ________________________ <b>${escapeHtml(normalizeUz(appState.teacher))}</b></td></tr><tr><td colspan="${totalCols}" class="no-border"></td></tr><tr><td colspan="${totalCols}" class="sec-title">NATIJALAR TAHLILI (${escapeHtml(normalizeUz(`${appState.subject} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • ${appState.controlType}`))})</td></tr><tr><td colspan="2" style="background:#ecfdf5;font-weight:bold;color:#047857;">Sifat körsatkiçi: ${data.qualityPct}%</td><td colspan="3" style="background:#f0fdfa;font-weight:bold;color:#0f766e;">Özlaştirish: ${data.masteryPct}%</td><td colspan="3" style="background:#eff6ff;font-weight:bold;color:#1d4ed8;">Örtaça baho: ${data.gpa.toFixed(1)}</td><td colspan="${Math.max(1, totalCols - 8)}" style="background:#fffbeb;font-weight:bold;">A'loçilar / past: ${data.grade5.length} / ${data.grade2.length}</td></tr>`;
-      const addExcelCat = (title, rows, hdrClass, withWeak) => {
-        html += `<tr><td colspan="${totalCols}" class="sec-title">${title} (${rows.length} nafar)</td></tr>`;
-        if (rows.length === 0) { html += `<tr><td colspan="${totalCols}" class="left">Uşbu toifada öquvçi yöq.</td></tr>`; return; }
-        html += `<tr><th class="${hdrClass}">№</th><th colspan="3" class="${hdrClass} left">F.I.Ş</th><th class="${hdrClass}">Ball</th><th class="${hdrClass}">Foiz</th><th colspan="${Math.max(1, totalCols - 6)}" class="${hdrClass} left">${withWeak ? 'Qiynalgan savollar (50% dan past)' : 'Baho'}</th></tr>`;
-        rows.forEach((r, idx) => {
-          html += `<tr><td>${idx + 1}</td><td colspan="3" class="left">${escapeHtml(r.name)}</td><td>${formatNum(r.total)}</td><td>${Math.round(r.pct)}%</td><td colspan="${Math.max(1, totalCols - 6)}" class="left">${withWeak ? (r.weakQuestions.length > 0 ? r.weakQuestions.join(', ') : '—') : r.grade}</td></tr>`;
+    async function exportReportExcel() {
+      const btn = event && event.target ? event.target.closest('button') : null;
+      const originalText = btn ? btn.innerHTML : '';
+      if (btn) { btn.innerHTML = '⏳ Excel (.xlsx) tayyorlanmoqda...'; btn.disabled = true; }
+
+      try {
+        const data = computeAnalytics();
+        const qCount = appState.questions.length;
+        const totalCols = qCount + 7;
+        const grpText = appState.group ? ` (${appState.group})` : '';
+
+        if (typeof ExcelJS === 'undefined') {
+          alert("ExcelJS kutubxonasi yuklanmoqda, iltimos bir necha soniyadan so'ng qayta bosing.");
+          if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+          return;
+        }
+
+        const wb = new ExcelJS.Workbook();
+        wb.creator = 'RUSTAMOV OKTAM SAYFIYEVICH';
+        wb.created = new Date();
+        const ws = wb.addWorksheet('BSB-CHSB Hisobot', { views: [{ showGridLines: true }] });
+
+        const NAVY = 'FF183661';
+        const SUB_HDR = 'FFE2E8F0';
+        const BILISH = 'FFE0F2FE';
+        const QOLLASH = 'FFFEF3C7';
+        const MULOHAZA = 'FFFCE7F3';
+        const SUM_ROW = 'FFF1F5F9';
+        const BORDER_COLOR = 'FF334155';
+        const WHITE = 'FFFFFFFF';
+
+        const thinBorder = {
+          top: { style: 'thin', color: { argb: BORDER_COLOR } },
+          left: { style: 'thin', color: { argb: BORDER_COLOR } },
+          bottom: { style: 'thin', color: { argb: BORDER_COLOR } },
+          right: { style: 'thin', color: { argb: BORDER_COLOR } }
+        };
+
+        // Ustun kengliklari
+        ws.getColumn(1).width = 5;
+        ws.getColumn(2).width = 28;
+        for (let i = 0; i < qCount; i++) {
+          ws.getColumn(3 + i).width = 6.5;
+        }
+        ws.getColumn(3 + qCount).width = 9;
+        ws.getColumn(4 + qCount).width = 9;
+        ws.getColumn(5 + qCount).width = 10;
+        ws.getColumn(6 + qCount).width = 8;
+        ws.getColumn(7 + qCount).width = 8;
+
+        // 1-qator: Maktab nomi
+        ws.mergeCells(1, 1, 1, totalCols);
+        const titleCell = ws.getCell('A1');
+        titleCell.value = normalizeUz(appState.school).toUpperCase();
+        titleCell.font = { name: 'Calibri', size: 14, bold: true, color: { argb: 'FF0F172A' } };
+        titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
+        ws.getRow(1).height = 25;
+
+        // 2-qator: Sarlavha ma'lumotlari
+        ws.mergeCells(2, 1, 2, totalCols);
+        const subCell = ws.getCell('A2');
+        subCell.value = normalizeUz(`${appState.subject} — ${appState.controlType} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • Sana: ${appState.date}`);
+        subCell.font = { name: 'Calibri', size: 10, bold: true, color: { argb: 'FF475569' } };
+        subCell.alignment = { horizontal: 'center', vertical: 'middle' };
+        ws.getRow(2).height = 20;
+
+        ws.getRow(3).height = 8;
+
+        // 4-qator: Jadval sarlavhasi (Navy)
+        const r4 = ws.getRow(4);
+        r4.height = 24;
+        const hVals = ['№', 'Öquvçining F.I.Ş'];
+        appState.questions.forEach((_, i) => hVals.push(String(i + 1)));
+        hVals.push('Biliş', 'Qöllaş', 'Mulohaza', 'Jami', '%');
+        r4.values = hVals;
+
+        for (let c = 1; c <= totalCols; c++) {
+          const cell = r4.getCell(c);
+          cell.border = thinBorder;
+          cell.font = { name: 'Calibri', size: 10, bold: true, color: { argb: WHITE } };
+          cell.alignment = { horizontal: c === 2 ? 'left' : 'center', vertical: 'middle' };
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: NAVY } };
+        }
+
+        // 5-qator: Namunaviy maksimal ballar
+        const r5 = ws.getRow(5);
+        r5.height = 20;
+        ws.mergeCells(5, 1, 5, 2);
+        const r5Vals = ['Ball', ''];
+        appState.questions.forEach(q => r5Vals.push(Number(q.max) || 0));
+        r5Vals.push(data.maxBilish, data.maxQollash, data.maxMulohaza, data.maxTotal, 100);
+        r5.values = r5Vals;
+
+        for (let c = 1; c <= totalCols; c++) {
+          const cell = r5.getCell(c);
+          cell.border = thinBorder;
+          cell.font = { name: 'Calibri', size: 9.5, bold: true };
+          cell.alignment = { horizontal: 'center', vertical: 'middle' };
+          if (c === 3 + qCount) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: BILISH } };
+          else if (c === 4 + qCount) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: QOLLASH } };
+          else if (c === 5 + qCount) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: MULOHAZA } };
+          else cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: SUB_HDR } };
+        }
+
+        // O'quvchilar qatorlari (Row 6...)
+        let curRow = 6;
+        data.studentRows.forEach(st => {
+          const row = ws.getRow(curRow);
+          row.height = 19;
+          const vals = [st.index, normalizeUz(st.name)];
+          st.scores.forEach(sc => vals.push(Number(sc) || 0));
+          vals.push(st.bilish, st.qollash, st.mulohaza, st.total, st.pct);
+          row.values = vals;
+
+          for (let c = 1; c <= totalCols; c++) {
+            const cell = row.getCell(c);
+            cell.border = thinBorder;
+            cell.font = { name: 'Calibri', size: 9.5 };
+            cell.alignment = { horizontal: c === 2 ? 'left' : 'center', vertical: 'middle' };
+            if (c >= 3 + qCount) {
+              cell.font = { name: 'Calibri', size: 9.5, bold: true };
+            }
+            if (c === 3 + qCount) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF0F9FF' } };
+            if (c === 4 + qCount) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFBEB' } };
+            if (c === 5 + qCount) cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFDF2F8' } };
+          }
+          curRow++;
         });
-      };
-      addExcelCat("A'loçilar (5 baho)", data.grade5, 'cat-5', false);
-      addExcelCat("Yaxşi özlaştiruvçilar (4 baho)", data.grade4, 'cat-4', false);
-      addExcelCat("Qoniqarli özlaştiruvçilar (3 baho)", data.grade3, 'cat-3', true);
-      addExcelCat("Past özlaştiruvçilar (2 baho)", data.grade2, 'cat-2', true);
-      html += `<tr><td colspan="${totalCols}" class="sec-title">Metodik xulosa</td></tr><tr><td colspan="${totalCols}" class="left" style="background:#f8fafc;">${escapeHtml(document.getElementById('methodConclusionText').textContent)}</td></tr><tr><td colspan="${totalCols}" class="sec-title">Tavsiyalar</td></tr><tr><td colspan="${totalCols}" class="left">${escapeHtml(document.getElementById('methodRecommendationsText').textContent)}</td></tr></table></body></html>`;
-      const blob = new Blob(['﻿', html], { type: 'application/vnd.ms-excel;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      const grpFile = appState.group ? `_${appState.group}` : '';
-      a.download = normalizeUz(`${appState.grade}-${appState.section}${grpFile}_${appState.subject}_${appState.controlType}_Hisobot.xls`).replace(/\s+/g, '_');
-      a.click();
-      URL.revokeObjectURL(url);
+
+        // Jami ball
+        const rJami = ws.getRow(curRow);
+        rJami.height = 20;
+        ws.mergeCells(curRow, 1, curRow, 2);
+        const jamiVals = ['Jami ball', ''];
+        data.questionSums.forEach(s => jamiVals.push(Number(s.toFixed(2))));
+        jamiVals.push(data.sumBilishAll, data.sumQollashAll, data.sumMulohazaAll, data.sumTotalAll, data.pctTotal);
+        rJami.values = jamiVals;
+        for (let c = 1; c <= totalCols; c++) {
+          const cell = rJami.getCell(c);
+          cell.border = thinBorder;
+          cell.font = { name: 'Calibri', size: 9.5, bold: true };
+          cell.alignment = { horizontal: c === 1 ? 'left' : 'center', vertical: 'middle' };
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: SUM_ROW } };
+        }
+        curRow++;
+
+        // O'rtacha
+        const rAvg = ws.getRow(curRow);
+        rAvg.height = 20;
+        ws.mergeCells(curRow, 1, curRow, 2);
+        const avgVals = ['Örtaça', ''];
+        data.questionAvgs.forEach(a => avgVals.push(a));
+        avgVals.push(data.avgBilish, data.avgQollash, data.avgMulohaza, data.avgTotal, data.pctTotal);
+        rAvg.values = avgVals;
+        for (let c = 1; c <= totalCols; c++) {
+          const cell = rAvg.getCell(c);
+          cell.border = thinBorder;
+          cell.font = { name: 'Calibri', size: 9.5, bold: true };
+          cell.alignment = { horizontal: c === 1 ? 'left' : 'center', vertical: 'middle' };
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: SUM_ROW } };
+        }
+        curRow++;
+
+        // Foiz (%)
+        const rPct = ws.getRow(curRow);
+        rPct.height = 20;
+        ws.mergeCells(curRow, 1, curRow, 2);
+        const pctVals = ['Foiz (%)', ''];
+        data.questionPcts.forEach(p => pctVals.push(p + '%'));
+        pctVals.push(data.pctBilish + '%', data.pctQollash + '%', data.pctMulohaza + '%', data.pctTotal + '%', data.pctTotal + '%');
+        rPct.values = pctVals;
+        for (let c = 1; c <= totalCols; c++) {
+          const cell = rPct.getCell(c);
+          cell.border = thinBorder;
+          cell.font = { name: 'Calibri', size: 9.5, bold: true };
+          cell.alignment = { horizontal: c === 1 ? 'left' : 'center', vertical: 'middle' };
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: SUM_ROW } };
+        }
+        curRow += 2;
+
+        // Imzolar bloki
+        const addSignRow = (role, name) => {
+          ws.mergeCells(curRow, 1, curRow, 3);
+          ws.mergeCells(curRow, 4, curRow, totalCols);
+          const c1 = ws.getCell(curRow, 1);
+          const c2 = ws.getCell(curRow, 4);
+          c1.value = role;
+          c1.font = { name: 'Calibri', size: 10, bold: true };
+          c2.value = '________________________  ' + normalizeUz(name);
+          c2.font = { name: 'Calibri', size: 10, bold: true };
+          curRow++;
+        };
+        addSignRow('ÖIBDÖ:', appState.deputy || DEFAULT_DEPUTY_NAME);
+        addSignRow('Metodbirlaşma rahbari:', appState.methodHead || 'Kiritilmagan');
+        addSignRow('Fan öqituvçisi:', appState.teacher || 'Kiritilmagan');
+
+        curRow += 2;
+
+        // NATIJALAR TAHLILI SARLAVHASI
+        ws.mergeCells(curRow, 1, curRow, totalCols);
+        const kpiHdr = ws.getCell(curRow, 1);
+        kpiHdr.value = normalizeUz(`NATIJALAR TAHLILI (${appState.subject} • ${appState.grade}-${appState.section}${grpText} • ${appState.quarter} • ${appState.controlType})`);
+        kpiHdr.font = { name: 'Calibri', size: 12, bold: true, color: { argb: NAVY } };
+        curRow++;
+
+        // 4 TA KPI KARTASI
+        const colStep = Math.max(2, Math.floor(totalCols / 4));
+        
+        ws.mergeCells(curRow, 1, curRow, colStep);
+        const k1 = ws.getCell(curRow, 1);
+        k1.value = `Sifat körsatkiçi: ${data.qualityPct}%`;
+        k1.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FF047857' } };
+        k1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFECFDF5' } };
+        k1.border = thinBorder;
+        k1.alignment = { horizontal: 'center', vertical: 'middle' };
+
+        ws.mergeCells(curRow, colStep + 1, curRow, colStep * 2);
+        const k2 = ws.getCell(curRow, colStep + 1);
+        k2.value = `Özlaştirish: ${data.masteryPct}%`;
+        k2.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FF0F766E' } };
+        k2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF0FDFA' } };
+        k2.border = thinBorder;
+        k2.alignment = { horizontal: 'center', vertical: 'middle' };
+
+        ws.mergeCells(curRow, colStep * 2 + 1, curRow, colStep * 3);
+        const k3 = ws.getCell(curRow, colStep * 2 + 1);
+        k3.value = `Örtaça baho: ${data.gpa.toFixed(1)}`;
+        k3.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FF1D4ED8' } };
+        k3.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFEFF6FF' } };
+        k3.border = thinBorder;
+        k3.alignment = { horizontal: 'center', vertical: 'middle' };
+
+        ws.mergeCells(curRow, colStep * 3 + 1, curRow, totalCols);
+        const k4 = ws.getCell(curRow, colStep * 3 + 1);
+        k4.value = `A'loçilar / Past: ${data.grade5.length} / ${data.grade2.length}`;
+        k4.font = { name: 'Calibri', size: 11, bold: true, color: { argb: 'FF92400E' } };
+        k4.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFBEB' } };
+        k4.border = thinBorder;
+        k4.alignment = { horizontal: 'center', vertical: 'middle' };
+        curRow += 2;
+
+        // TOIFALAR (A'LOCHILAR, YAXSHILAR, QONIQARLILAR, PASTLAR)
+        const addCatTable = (title, list, colorHex, withWeak) => {
+          ws.mergeCells(curRow, 1, curRow, totalCols);
+          const catTitle = ws.getCell(curRow, 1);
+          catTitle.value = `${title} (${list.length} nafar)`;
+          catTitle.font = { name: 'Calibri', size: 11, bold: true, color: { argb: colorHex } };
+          curRow++;
+
+          if (list.length === 0) {
+            ws.mergeCells(curRow, 1, curRow, totalCols);
+            const emptyCell = ws.getCell(curRow, 1);
+            emptyCell.value = 'Uşbu toifada öquvçi yöq.';
+            emptyCell.font = { name: 'Calibri', size: 9.5, italic: true };
+            curRow += 2;
+            return;
+          }
+
+          const catHdrRow = ws.getRow(curRow);
+          catHdrRow.height = 20;
+          ws.mergeCells(curRow, 2, curRow, 4);
+          ws.mergeCells(curRow, 7, curRow, totalCols);
+          catHdrRow.getCell(1).value = '№';
+          catHdrRow.getCell(2).value = 'F.I.Ş';
+          catHdrRow.getCell(5).value = 'Ball';
+          catHdrRow.getCell(6).value = 'Foiz';
+          catHdrRow.getCell(7).value = withWeak ? 'Qiynalgan savollar (50% dan past)' : 'Baho';
+
+          for (let c = 1; c <= totalCols; c++) {
+            const cell = catHdrRow.getCell(c);
+            cell.border = thinBorder;
+            cell.font = { name: 'Calibri', size: 9.5, bold: true, color: { argb: WHITE } };
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: colorHex } };
+            cell.alignment = { horizontal: c === 2 ? 'left' : 'center', vertical: 'middle' };
+          }
+          curRow++;
+
+          list.forEach((item, idx) => {
+            const row = ws.getRow(curRow);
+            row.height = 18;
+            ws.mergeCells(curRow, 2, curRow, 4);
+            ws.mergeCells(curRow, 7, curRow, totalCols);
+            row.getCell(1).value = idx + 1;
+            row.getCell(2).value = normalizeUz(item.name);
+            row.getCell(5).value = item.total;
+            row.getCell(6).value = Math.round(item.pct) + '%';
+            row.getCell(7).value = withWeak ? (item.weakQuestions.length > 0 ? item.weakQuestions.join(', ') : '—') : item.grade;
+
+            for (let c = 1; c <= totalCols; c++) {
+              const cell = row.getCell(c);
+              cell.border = thinBorder;
+              cell.font = { name: 'Calibri', size: 9 };
+              cell.alignment = { horizontal: c === 2 || (c === 7 && withWeak) ? 'left' : 'center', vertical: 'middle' };
+            }
+            curRow++;
+          });
+          curRow++;
+        };
+
+        addCatTable("A'loçilar (5 baho)", data.grade5, 'FF2E9E5B', false);
+        addCatTable("Yaxşi özlaştiruvçilar (4 baho)", data.grade4, 'FF24589C', false);
+        addCatTable("Qoniqarli özlaştiruvçilar (3 baho)", data.grade3, 'FFD99B26', true);
+        addCatTable("Past özlaştiruvçilar (2 baho)", data.grade2, 'FFC93B3B', true);
+
+        // Metodik Xulosa
+        ws.mergeCells(curRow, 1, curRow, totalCols);
+        const mxTitle = ws.getCell(curRow, 1);
+        mxTitle.value = 'Metodik xulosa:';
+        mxTitle.font = { name: 'Calibri', size: 10, bold: true, color: { argb: NAVY } };
+        curRow++;
+
+        ws.mergeCells(curRow, 1, curRow + 1, totalCols);
+        const mxBody = ws.getCell(curRow, 1);
+        const mxEl = document.getElementById('methodConclusionText');
+        mxBody.value = mxEl ? mxEl.textContent : '';
+        mxBody.font = { name: 'Calibri', size: 9 };
+        mxBody.alignment = { wrapText: true, vertical: 'top' };
+        curRow += 3;
+
+        // Tavsiyalar
+        ws.mergeCells(curRow, 1, curRow, totalCols);
+        const tvTitle = ws.getCell(curRow, 1);
+        tvTitle.value = 'Tavsiyalar:';
+        tvTitle.font = { name: 'Calibri', size: 10, bold: true, color: { argb: NAVY } };
+        curRow++;
+
+        ws.mergeCells(curRow, 1, curRow + 1, totalCols);
+        const tvBody = ws.getCell(curRow, 1);
+        const tvEl = document.getElementById('methodRecommendationsText');
+        tvBody.value = tvEl ? tvEl.textContent : '';
+        tvBody.font = { name: 'Calibri', size: 9 };
+        tvBody.alignment = { wrapText: true, vertical: 'top' };
+
+        // Haqiqiy zamonaviy .XLSX fayl sifatida yuklab berish
+        const buffer = await wb.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const grpFile = appState.group ? `_${appState.group}` : '';
+        a.download = normalizeUz(`${appState.grade}-${appState.section}${grpFile}_${appState.subject}_${appState.controlType}_Hisobot.xlsx`).replace(/\s+/g, '_');
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error('Excel eksportida xato:', err);
+        alert('Excel (.xlsx) faylni yaratishda xatolik yuz berdi: ' + err.message);
+      } finally {
+        if (btn) { btn.innerHTML = originalText; btn.disabled = false; }
+      }
     }
 
     function saveToArchive() {
